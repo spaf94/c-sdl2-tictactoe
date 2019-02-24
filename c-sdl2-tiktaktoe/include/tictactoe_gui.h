@@ -16,7 +16,8 @@ typedef enum tictactoe_images
     TTT_IMG_NONE        = -1,
     TTT_IMG_MENU_1VS1   = 0,
     TTT_IMG_MENU_1VSCOM = 1,
-    TTT_IMG_MENU_QUIT   = 2
+    TTT_IMG_MENU_QUIT   = 2,
+    TTT_IMG_BOARD       = 3
 } ttt_img_t;
 
 typedef struct tictactoe_gui

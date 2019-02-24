@@ -9,10 +9,18 @@
 #define GUI_WIN_MAIN_W      640
 #define GUI_WIN_MAIN_H      480
 
-// GUI Images
-#define GUI_IMG_MENU_1VS1   "../c-sdl2-tiktaktoe/img/1_menu_1vs1.png"
-#define GUI_IMG_MENU_1VSCOM "../c-sdl2-tiktaktoe/img/2_menu_1vsCOM.png"
-#define GUI_IMG_MENU_QUIT   "../c-sdl2-tiktaktoe/img/3_menu_quit.png"
+/******************************************************************************/
+
+static struct
+{
+    ttt_img_t img;
+    char file[64];
+} _gui_images[GUI_IMG_ARR_LEN] = {
+    { TTT_IMG_MENU_1VS1     , "../c-sdl2-tiktaktoe/img/1_menu_1vs1.png"     },
+    { TTT_IMG_MENU_1VSCOM   , "../c-sdl2-tiktaktoe/img/2_menu_1vsCOM.png"   },
+    { TTT_IMG_MENU_QUIT     , "../c-sdl2-tiktaktoe/img/3_menu_quit.png"     },
+    { TTT_IMG_BOARD         , "../c-sdl2-tiktaktoe/img/4_board.png"         },
+};
 
 /******************************************************************************/
 
@@ -25,20 +33,16 @@ void _tictactoe_gui_textures_create( tictactoe_gui_t *gui )
 {
     SDL_Surface *surface = NULL;
 
-    // Load menu 1vs1
-    surface = IMG_Load( GUI_IMG_MENU_1VS1 );
-    if( surface != NULL )
-        gui->images[TTT_IMG_MENU_1VS1] = SDL_CreateTextureFromSurface( gui->ren_main, surface );
-
-    // Load menu 1vsCOM
-    surface = IMG_Load( GUI_IMG_MENU_1VSCOM );
-    if( surface != NULL )
-        gui->images[TTT_IMG_MENU_1VSCOM] = SDL_CreateTextureFromSurface( gui->ren_main, surface );
-
-    // Load menu quit
-    surface = IMG_Load( GUI_IMG_MENU_QUIT );
-    if( surface != NULL )
-        gui->images[TTT_IMG_MENU_QUIT] = SDL_CreateTextureFromSurface( gui->ren_main, surface );
+    for ( int i = 0; i < GUI_IMG_ARR_LEN; i++ )
+    {
+        surface = IMG_Load( _gui_images[i].file );
+        if( surface != NULL )
+        {
+            const int idx = _gui_images[i].img;
+            gui->images[idx] = SDL_CreateTextureFromSurface( gui->ren_main,
+                                                             surface );
+        }
+    }
 
     SDL_FreeSurface( surface );
 }

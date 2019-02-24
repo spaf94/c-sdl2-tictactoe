@@ -13,6 +13,7 @@ tictactoe_ctx_t *tictactoe_ctx_new()
     ctx->gui = tictactoe_gui_new(); // Creates game GUI
     ctx->menu_option = MENU_OPTION_1VS1;
     ctx->running = true;
+    ctx->playing = false;
 
     return ctx;
 }
@@ -59,8 +60,6 @@ void tictactoe_ctx_renderize( tictactoe_ctx_t *ctx )
         img = TTT_IMG_MENU_QUIT;
         break;
     }
-
-    SDL_Log( "ctx->menu_option: %d | img: %d \n", ctx->menu_option, img );
 
     // Draw menu
     tictactoe_gui_menu_renderize( ctx->gui, img );

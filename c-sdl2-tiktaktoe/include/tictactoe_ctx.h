@@ -22,8 +22,9 @@ typedef struct tictactoe_ctx
     tictactoe_gui_t *gui;
     // Menu option
     menu_option_t menu_option;
-    // Flag running
+    // Flags
     bool running;
+    bool playing;
 } tictactoe_ctx_t;
 
 /******************************************************************************/
