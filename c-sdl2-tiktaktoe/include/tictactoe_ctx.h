@@ -3,11 +3,28 @@
 
 /******************************************************************************/
 
-#include <stdbool.h>
+#include "tictactoe_gui.h"
+#include "internal.h"
 
 /******************************************************************************/
 
-typedef struct tictactoe_ctx_t tictactoe_ctx_t;
+typedef enum menu_options
+{
+    MENU_OPTION_NONE    = -1,
+    MENU_OPTION_1VS1    = 0,
+    MENU_OPTION_1VSCOM  = 1,
+    MENU_OPTION_QUIT    = 2
+} menu_option_t;
+
+typedef struct tictactoe_ctx
+{
+    // GUI context
+    tictactoe_gui_t *gui;
+    // Menu option
+    menu_option_t menu_option;
+    // Flag running
+    bool running;
+} tictactoe_ctx_t;
 
 /******************************************************************************/
 
@@ -27,20 +44,10 @@ void tictactoe_ctx_free( tictactoe_ctx_t *ctx );
 /******************************************************************************/
 
 /**
-* @brief Gets flag running value
-* @param ctx    tictactoe context
-* @return true, when game is running
+* @brief Renderizes game
+* @param ctx    game context
 */
-bool tictactoe_ctx_running_get( tictactoe_ctx_t *ctx );
-
-/******************************************************************************/
-
-/**
-* @brief Sets flag running value
-* @param ctx        tictactoe context
-* @param running    running value [TRUE or FALSE]
-*/
-void tictactoe_ctx_running_set( tictactoe_ctx_t *ctx, bool running );
+void tictactoe_ctx_renderize( tictactoe_ctx_t *ctx );
 
 /******************************************************************************/
 

@@ -24,13 +24,15 @@ include_directories(${INC_DIR}
 set(INCLUDES
     ${INC_DIR}/internal.h
     ${INC_DIR}/tictactoe_ctx.h
-    ${INC_DIR}/tictactoe_gui.h)
+    ${INC_DIR}/tictactoe_gui.h
+    ${INC_DIR}/tictactoe_events.h)
 
 # Set source files
 set(SOURCES
     ${SRC_DIR}/main.c
     ${SRC_DIR}/tictactoe_ctx.c
-    ${SRC_DIR}/tictactoe_gui.c)
+    ${SRC_DIR}/tictactoe_gui.c
+    ${SRC_DIR}/tictactoe_events.c)
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${INCLUDES})
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})

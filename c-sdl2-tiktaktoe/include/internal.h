@@ -6,4 +6,8 @@
 #include <SDL_ttf.h>
 #include <SDL_image.h>
 
+// Include system headers
+#include <stdio.h>
+#include <stdbool.h>
+
 #endif // INTERNAL_H

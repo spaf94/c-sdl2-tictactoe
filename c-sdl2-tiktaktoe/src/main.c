@@ -1,7 +1,9 @@
-#include "tictactoe_ctx.h"
-#include "internal.h"
+/******************************************************************************/
 
-#include <stdio.h>
+#include "tictactoe_ctx.h"
+#include "tictactoe_events.h"
+
+/******************************************************************************/
 
 int main()
 {
@@ -12,12 +14,11 @@ int main()
     if ( ctx == NULL )
         goto end;
 
-//    while ( tictactoe_ctx_running_get( ctx) )
-//    {
-
-//    }
-
-    SDL_Delay( 3000 );
+    while ( ctx->running )
+    {
+        tictactoe_events_process( ctx );
+        tictactoe_ctx_renderize( ctx );
+    }
 
 end:
     // Release game context
@@ -27,3 +28,5 @@ end:
 
     return 0;
 }
+
+/******************************************************************************/

@@ -1,19 +1,6 @@
 /******************************************************************************/
 
 #include "tictactoe_ctx.h"
-#include "tictactoe_gui.h"
-
-#include <stdlib.h>
-
-/******************************************************************************/
-
-struct tictactoe_ctx_t
-{
-    // GUI context
-    tictactoe_gui_t *gui;
-    // Flag running
-    bool running;
-};
 
 /******************************************************************************/
 
@@ -24,8 +11,8 @@ tictactoe_ctx_t *tictactoe_ctx_new()
 {
     tictactoe_ctx_t *ctx = calloc( 1, sizeof (*ctx) );
     ctx->gui = tictactoe_gui_new(); // Creates game GUI
-
-    tictactoe_ctx_running_set( ctx, true );
+    ctx->menu_option = MENU_OPTION_1VS1;
+    ctx->running = true;
 
     return ctx;
 }
@@ -50,29 +37,36 @@ void tictactoe_ctx_free( tictactoe_ctx_t *ctx )
 /******************************************************************************/
 
 /**
-* @brief Gets flag running value
-* @param ctx    tictactoe context
-* @return true, when game is running
+* @brief Renderizes game
+* @param ctx    game context
 */
-bool tictactoe_ctx_running_get( tictactoe_ctx_t *ctx )
+void tictactoe_ctx_renderize( tictactoe_ctx_t *ctx )
 {
-    if ( ctx != NULL )
-        return ctx->running;
+    // Gets menu option
+    ttt_img_t img = TTT_IMG_NONE;
+    switch ( ctx->menu_option )
+    {
+    case MENU_OPTION_NONE:
+        img = TTT_IMG_NONE;
+        break;
+    case MENU_OPTION_1VS1:
+        img = TTT_IMG_MENU_1VS1;
+        break;
+    case MENU_OPTION_1VSCOM:
+        img = TTT_IMG_MENU_1VSCOM;
+        break;
+    case MENU_OPTION_QUIT:
+        img = TTT_IMG_MENU_QUIT;
+        break;
+    }
 
-    return false;
-}
+    SDL_Log( "ctx->menu_option: %d | img: %d \n", ctx->menu_option, img );
 
-/******************************************************************************/
+    // Draw menu
+    tictactoe_gui_menu_renderize( ctx->gui, img );
 
-/**
-* @brief Sets flag running value
-* @param ctx        tictactoe context
-* @param running    running value [TRUE or FALSE]
-*/
-void tictactoe_ctx_running_set( tictactoe_ctx_t *ctx, bool running )
-{
-    if ( ctx != NULL )
-        ctx->running = running;
+    // Show render
+    SDL_RenderPresent( ctx->gui->ren_main );
 }
 
 /******************************************************************************/
