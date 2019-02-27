@@ -1,5 +1,5 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef BOARD_H
+#define BOARD_H
 
 /******************************************************************************/
 
@@ -7,56 +7,46 @@
 
 /******************************************************************************/
 
-typedef enum
-{
-    MENU_OPTION_1VS1,
-    MENU_OPTION_1VSCOM,
-    MENU_OPTION_QUIT
-} menu_option_t;
-
 typedef struct
 {
     // SDL
     SDL_Renderer *renderer;
     TTF_Font *font;
-    SDL_Texture *texture;
     // Aux data
     int window_w;
     int window_h;
-    // Menu
-    menu_option_t option;
-    bool option_changed;
+    // Board
     bool drawn;
-} menu_t;
+} board_t;
 
 /******************************************************************************/
 
 /**
-* @brief Create a menu context
+* @brief Create a board context
 * @param renderer   game renderer
 * @param font       game font
 * @param wh         game window heigth
 * @param ww         game window width
-* @return menu context
+* @return board context
 */
-menu_t *menu_new( SDL_Renderer *renderer, TTF_Font *font, int wh, int ww );
+board_t *board_new( SDL_Renderer *renderer, TTF_Font *font, int wh, int ww );
 
 /******************************************************************************/
 
 /**
-* @brief Release menu context
-* @param menu   menu context
+* @brief Release board context
+* @param board   board context
 */
-void menu_free( menu_t *menu );
+void board_free( board_t *board );
 
 /******************************************************************************/
 
 /**
-* @brief Render the menu
-* @param menu   menu context
+* @brief Render the board
+* @param board   board context
 */
-void menu_render( menu_t *menu );
+void board_render( board_t *board );
 
 /******************************************************************************/
 
-#endif // MENU_H
+#endif // BOARD_H

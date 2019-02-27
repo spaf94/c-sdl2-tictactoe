@@ -14,6 +14,7 @@ int main()
 
     while ( ttt->running )
     {
+        tictactoe_events_handle( ttt );
         tictactoe_render( ttt );
         SDL_Delay( 100 );
     }
