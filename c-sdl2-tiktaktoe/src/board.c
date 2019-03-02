@@ -2,6 +2,9 @@
 
 #include "board.h"
 #include "color.h"
+#include "shape.h"
+
+#include <math.h>
 
 /******************************************************************************/
 
@@ -100,10 +103,6 @@ void board_render( board_t *board )
         SDL_SetRenderDrawColor( board->renderer, color.r, color.g, color.b, color.a );
         SDL_RenderClear( board->renderer );
 
-        // Gets first line positions
-        const int h1 = board->window_h / 3; // First horizontal line position
-        const int v1 = board->window_w / 3; // First vertical line position
-
         // Draw horizontal lines
         for ( int i = 1; i < 3; i++ )
             _board_line_render( board, i, false );
@@ -111,6 +110,12 @@ void board_render( board_t *board )
         // Draw vertical lines
         for ( int i = 1; i < 3; i++ )
             _board_line_render( board, i, true );
+
+        SDL_Point center = { 175, 100 };
+        shape_circle_render( board->renderer, &center, 50, 4, COLOR_RED );
+
+        SDL_Rect data = { 325, 100, 100, 100 };
+        shape_X_render( board->renderer, &data, 4, COLOR_BLACK);
 
         board->drawn = true;
     }

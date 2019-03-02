@@ -4,7 +4,7 @@
 
 /******************************************************************************/
 
-#define GUI_COLORS_ARR_LEN  7
+#define GUI_COLORS_ARR_LEN  8
 
 /******************************************************************************/
 
@@ -15,6 +15,7 @@ static struct
 } _colors_arr[GUI_COLORS_ARR_LEN] = {
     { COLOR_BLACK,          { 0   , 0   , 0   , 0 } },
     { COLOR_WHITE,          { 255 , 255 , 255 , 0 } },
+    { COLOR_RED,            { 255 , 0   , 0   , 0 } },
     { COLOR_GAINSBORO,      { 220 , 220 , 220 , 0 } },
     { COLOR_DARKSLATEBLUE,  { 72  , 61  , 139 , 0 } },
     { COLOR_LIGHTSKYBLUE,   { 135 , 206 , 250 , 0 } },
