@@ -9,6 +9,7 @@
 
 typedef enum
 {
+    MENU_OPTION_NONE,
     MENU_OPTION_1VS1,
     MENU_OPTION_1VSCOM,
     MENU_OPTION_QUIT
