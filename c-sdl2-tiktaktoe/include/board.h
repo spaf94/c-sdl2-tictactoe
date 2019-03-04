@@ -16,7 +16,9 @@ typedef struct
     int window_w;
     int window_h;
     // Board
-    bool drawn;
+    int timer;
+    bool playing;
+    bool blinking;
 } board_t;
 
 /******************************************************************************/
