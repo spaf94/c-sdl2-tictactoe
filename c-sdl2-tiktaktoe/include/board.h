@@ -4,6 +4,7 @@
 /******************************************************************************/
 
 #include "internal.h"
+#include "engine.h"
 
 /******************************************************************************/
 
@@ -16,9 +17,15 @@ typedef struct
     int window_w;
     int window_h;
     // Board
+    engine_t *engine;
     int timer;
     bool playing;
     bool blinking;
+    bool playerX;
+    // Board rectangles
+    SDL_Rect rect_arr[GAME_BOARD_DIVS][GAME_BOARD_DIVS];
+    int row;
+    int column;
 } board_t;
 
 /******************************************************************************/

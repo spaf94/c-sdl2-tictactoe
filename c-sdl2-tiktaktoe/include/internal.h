@@ -10,4 +10,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+// Defines
+#define GAME_BOARD_DIVS 3
+
 #endif // INTERNAL_H

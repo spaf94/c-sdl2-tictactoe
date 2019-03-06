@@ -11,7 +11,7 @@
 #define BOARD_LINE_W    405 // Board line width
 #define BOARD_LINE_H    5   // Board line heigth
 #define BOARD_DIV_W     (BOARD_LINE_W / 3) // Board divided in 3 zones
-#define BOARD_TIMER_MS  1000
+#define BOARD_TIMER_MS  500
 
 /******************************************************************************/
 
@@ -71,6 +71,26 @@ void _board_line_render( board_t *board, int line, bool vertical )
 
 /******************************************************************************/
 
+static
+void _board_plays_rect_init( board_t *board )
+{
+    const int wm = ((board->window_w - BOARD_LINE_W) / 2); // Width margin
+    const int hm = ((board->window_h - BOARD_LINE_W) / 2); // Height margin
+
+    for ( int i = 0; i < 3; i++ )
+    {
+        for ( int k = 0; k < 3; k++ )
+        {
+            board->rect_arr[i][k].x = wm + (BOARD_DIV_W * i);
+            board->rect_arr[i][k].y = hm + (BOARD_DIV_W * k);
+            board->rect_arr[i][k].h = BOARD_DIV_W;
+            board->rect_arr[i][k].w = BOARD_DIV_W;
+        }
+    }
+}
+
+/******************************************************************************/
+
 /**
 * @brief Create a board context
 * @param renderer   game renderer
@@ -88,6 +108,9 @@ board_t *board_new( SDL_Renderer *renderer, TTF_Font *font, int wh, int ww )
     board->window_w = ww;
     board->playing = true;
     board->blinking = true;
+    board->engine = engine_new();
+
+    _board_plays_rect_init( board );
 
     return board;
 }
@@ -103,6 +126,9 @@ void board_free( board_t *board )
     if ( board != NULL )
     {
         free( board );
+
+        if ( board->engine != NULL )
+            engine_free( board->engine );
     }
 }
 
@@ -122,6 +148,33 @@ void board_render( board_t *board )
     SDL_SetRenderDrawColor( board->renderer, color.r, color.g, color.b, color.a );
     SDL_RenderClear( board->renderer );
 
+    if ( board->playing )
+    {
+        engine_next_move_get( board->engine, &board->row, &board->column );
+
+        if ( board->blinking )
+            color = color_SDL_Color_get( COLOR_LIGHTSKYBLUE );
+        else
+            color = color_SDL_Color_get( COLOR_GAINSBORO );
+
+        SDL_SetRenderDrawColor( board->renderer, color.r, color.g, color.b, color.a );
+        SDL_Rect rect = board->rect_arr[board->row][board->column];
+        SDL_RenderFillRect( board->renderer, &rect );
+
+        const int cx = rect.x + (rect.w / 2);
+        const int cy = rect.y + (rect.h / 2);
+        if ( board->playerX )
+        {
+            SDL_Rect data = { cx, cy, 100, 100 };
+            shape_X_render( board->renderer, &data, 4, COLOR_BLACK );
+        }
+        else
+        {
+            SDL_Point center = { cx, cy };
+            shape_circle_render( board->renderer, &center, 50, 4, COLOR_RED );
+        }
+    }
+
     // Draw horizontal lines
     for ( int i = 1; i < 3; i++ )
         _board_line_render( board, i, false );
@@ -129,24 +182,6 @@ void board_render( board_t *board )
     // Draw vertical lines
     for ( int i = 1; i < 3; i++ )
         _board_line_render( board, i, true );
-
-    SDL_Point center = { 175, 100 };
-    shape_circle_render( board->renderer, &center, 50, 4, COLOR_RED );
-
-    SDL_Rect data = { 325, 100, 100, 100 };
-    shape_X_render( board->renderer, &data, 4, COLOR_BLACK);
-
-    if ( board->playing )
-    {
-        if ( board->blinking )
-            color = color_SDL_Color_get( COLOR_GAME_BLUE );
-        else
-            color = color_SDL_Color_get( COLOR_RED );
-
-        SDL_SetRenderDrawColor( board->renderer, color.r, color.g, color.b, color.a );
-        SDL_Rect rect = { 100, 100, 100, 100 };
-        SDL_RenderFillRect( board->renderer, &rect );
-    }
 }
 
 /******************************************************************************/

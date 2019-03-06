@@ -109,6 +109,9 @@ void _tictactoe_events_keydown_ENTER_handle( tictactoe_t *ttt )
     {
         switch ( ttt->menu->option )
         {
+        case MENU_OPTION_NONE:
+            ttt->play_mode = PLAY_MODE_NONE;
+            break;
         case MENU_OPTION_1VS1:
             ttt->play_mode = PLAY_MODE_1VS1;
             break;
@@ -122,7 +125,16 @@ void _tictactoe_events_keydown_ENTER_handle( tictactoe_t *ttt )
     }
     else
     {
-
+        if ( ttt->board->playerX )
+        {
+            engine_play_set( ttt->board->engine, ttt->board->row, ttt->board->column, ENGINE_PLAY_X );
+            ttt->board->playerX = false;
+        }
+        else
+        {
+            engine_play_set( ttt->board->engine, ttt->board->row, ttt->board->column, ENGINE_PLAY_X );
+            ttt->board->playerX = true;
+        }
     }
 }
 
@@ -146,7 +158,10 @@ void _tictactoe_events_keydown_UP_handle( tictactoe_t *ttt )
     }
     else
     {
-
+        if ( (ttt->board->column - 1) < 0 )
+            ttt->board->column = (GAME_BOARD_DIVS - 1);
+        else
+            ttt->board->column--;
     }
 }
 
@@ -170,7 +185,40 @@ void _tictactoe_events_keydown_DOWN_handle( tictactoe_t *ttt )
     }
     else
     {
+        if ( (ttt->board->column + 1) >= GAME_BOARD_DIVS )
+            ttt->board->column = 0;
+        else
+            ttt->board->column++;
+    }
+}
 
+/******************************************************************************/
+
+static
+void _tictactoe_events_keydown_RIGHT_handle( tictactoe_t *ttt )
+{
+    const bool play = (ttt->play_mode != PLAY_MODE_NONE);
+    if ( play )
+    {
+        if ( (ttt->board->row + 1) >= GAME_BOARD_DIVS )
+            ttt->board->row = 0;
+        else
+            ttt->board->row++;
+    }
+}
+
+/******************************************************************************/
+
+static
+void _tictactoe_events_keydown_LEFT_handle( tictactoe_t *ttt )
+{
+    const bool play = (ttt->play_mode != PLAY_MODE_NONE);
+    if ( play )
+    {
+        if ( (ttt->board->row - 1) < 0 )
+            ttt->board->row = (GAME_BOARD_DIVS - 1);
+        else
+            ttt->board->row--;
     }
 }
 
@@ -184,8 +232,6 @@ void _tictactoe_events_keydown_DOWN_handle( tictactoe_t *ttt )
 static
 void _tictactoe_events_keydown_handle( tictactoe_t *ttt, SDL_KeyboardEvent *key_ev )
 {
-    SDL_Log( "%d \n", key_ev->keysym.sym );
-
     switch ( key_ev->keysym.sym )
     {
     case SDLK_ESCAPE:
@@ -196,6 +242,12 @@ void _tictactoe_events_keydown_handle( tictactoe_t *ttt, SDL_KeyboardEvent *key_
         break;
     case SDLK_UP:
         _tictactoe_events_keydown_UP_handle( ttt );
+        break;
+    case SDLK_RIGHT:
+        _tictactoe_events_keydown_RIGHT_handle( ttt );
+        break;
+    case SDLK_LEFT:
+        _tictactoe_events_keydown_LEFT_handle( ttt );
         break;
     case SDLK_RETURN:
         _tictactoe_events_keydown_ENTER_handle( ttt );

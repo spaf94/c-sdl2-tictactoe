@@ -27,7 +27,8 @@ set(INCLUDES
     ${INC_DIR}/menu.h
     ${INC_DIR}/color.h
     ${INC_DIR}/board.h
-    ${INC_DIR}/shape.h)
+    ${INC_DIR}/shape.h
+    ${INC_DIR}/engine.h)
 
 # Set source files
 set(SOURCES
@@ -36,7 +37,8 @@ set(SOURCES
     ${SRC_DIR}/menu.c
     ${SRC_DIR}/color.c
     ${SRC_DIR}/board.c
-    ${SRC_DIR}/shape.c)
+    ${SRC_DIR}/shape.c
+    ${SRC_DIR}/engine.c)
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${INCLUDES})
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} m)
