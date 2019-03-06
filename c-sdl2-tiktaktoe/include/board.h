@@ -8,6 +8,14 @@
 
 /******************************************************************************/
 
+typedef enum
+{
+    BOARD_DIRECTION_UP,
+    BOARD_DIRECTION_DOWN,
+    BOARD_DIRECTION_RIGHT,
+    BOARD_DIRECTION_LEFT
+} board_direction_t;
+
 typedef struct
 {
     // SDL
@@ -24,7 +32,7 @@ typedef struct
     bool playerX;
     // Board rectangles
     SDL_Rect rect_arr[GAME_BOARD_DIVS][GAME_BOARD_DIVS];
-    engine_play_data_t play_data;
+    engine_move_t play_data;
 } board_t;
 
 /******************************************************************************/
@@ -54,6 +62,10 @@ void board_free( board_t *board );
 * @param board   board context
 */
 void board_render( board_t *board );
+
+/******************************************************************************/
+
+void board_player_move( board_t *board, board_direction_t direction );
 
 /******************************************************************************/
 

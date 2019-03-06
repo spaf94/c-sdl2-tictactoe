@@ -20,15 +20,15 @@ void _board_plays_render( board_t *board )
 {
     int x_arr_len = 0;
     int o_arr_len = 0;
-    engine_play_data_t x_arr[GAME_MAX_PLAYS] = { 0 };
-    engine_play_data_t o_arr[GAME_MAX_PLAYS] = { 0 };
+    engine_move_t x_arr[GAME_MAX_PLAYS] = { 0 };
+    engine_move_t o_arr[GAME_MAX_PLAYS] = { 0 };
 
-    engine_plays_get( board->engine, x_arr, &x_arr_len, o_arr, &o_arr_len );
+    engine_moves_get( board->engine, x_arr, &x_arr_len, o_arr, &o_arr_len );
 
     // Draw X's
     for ( int i = 0; i < x_arr_len; i++ )
     {
-        engine_play_data_t x = x_arr[i];
+        engine_move_t x = x_arr[i];
         SDL_Rect rect = board->rect_arr[x.row][x.column];
 
         const int cx = rect.x + (rect.w / 2);
@@ -41,7 +41,7 @@ void _board_plays_render( board_t *board )
     // Draw O's
     for ( int i = 0; i < o_arr_len; i++ )
     {
-        engine_play_data_t o = o_arr[i];
+        engine_move_t o = o_arr[i];
         SDL_Rect rect = board->rect_arr[o.row][o.column];
 
         const int cx = rect.x + (rect.w / 2);
@@ -224,6 +224,72 @@ void board_render( board_t *board )
 
     // Draw last plays
     _board_plays_render( board );
+}
+
+/******************************************************************************/
+
+void board_player_move( board_t *board, board_direction_t direction )
+{
+    if ( direction == BOARD_DIRECTION_UP )
+    {
+        if ( (board->play_data.row - 1) < 0 )
+            board->play_data.row = (GAME_BOARD_DIVS - 1);
+        else
+            board->play_data.row--;
+
+        while ( !engine_move_valid( board->engine, &board->play_data ))
+        {
+            if ( (board->play_data.row - 1) < 0 )
+                board->play_data.row = (GAME_BOARD_DIVS - 1);
+            else
+                board->play_data.row--;
+        }
+    }
+    else if ( direction == BOARD_DIRECTION_DOWN )
+    {
+        if ( (board->play_data.row + 1) >= GAME_BOARD_DIVS )
+            board->play_data.row = 0;
+        else
+            board->play_data.row++;
+
+        while ( !engine_move_valid( board->engine, &board->play_data ))
+        {
+            if ( (board->play_data.row + 1) >= GAME_BOARD_DIVS )
+                board->play_data.row = 0;
+            else
+                board->play_data.row++;
+        }
+    }
+    else if ( direction == BOARD_DIRECTION_RIGHT )
+    {
+        if ( (board->play_data.column + 1) >= GAME_BOARD_DIVS )
+            board->play_data.column = 0;
+        else
+            board->play_data.column++;
+
+        while ( !engine_move_valid( board->engine, &board->play_data ))
+        {
+            if ( (board->play_data.column + 1) >= GAME_BOARD_DIVS )
+                board->play_data.column = 0;
+            else
+                board->play_data.column++;
+        }
+    }
+    else if ( direction == BOARD_DIRECTION_LEFT )
+    {
+        if ( (board->play_data.column - 1) < 0 )
+            board->play_data.column = (GAME_BOARD_DIVS - 1);
+        else
+            board->play_data.column--;
+
+        while ( !engine_move_valid( board->engine, &board->play_data ))
+        {
+            if ( (board->play_data.column - 1) < 0 )
+                board->play_data.column = (GAME_BOARD_DIVS - 1);
+            else
+                board->play_data.column--;
+        }
+    }
 }
 
 /******************************************************************************/

@@ -128,19 +128,17 @@ void _tictactoe_events_keydown_ENTER_handle( tictactoe_t *ttt )
         if ( ttt->board->playerX )
         {
             ttt->board->playerX = false;
-            engine_play_set(
+            engine_move_set(
                         ttt->board->engine,
-                        ttt->board->play_data.row,
-                        ttt->board->play_data.column,
+                        &ttt->board->play_data,
                         ENGINE_PLAY_X );
         }
         else
         {
             ttt->board->playerX = true;
-            engine_play_set(
+            engine_move_set(
                         ttt->board->engine,
-                        ttt->board->play_data.row,
-                        ttt->board->play_data.column,
+                        &ttt->board->play_data,
                         ENGINE_PLAY_O );
         }
     }
@@ -166,18 +164,7 @@ void _tictactoe_events_keydown_UP_handle( tictactoe_t *ttt )
     }
     else
     {
-        if ( (ttt->board->play_data.row - 1) < 0 )
-            ttt->board->play_data.row = (GAME_BOARD_DIVS - 1);
-        else
-            ttt->board->play_data.row--;
-
-        while ( !engine_move_valid( ttt->board->engine, &ttt->board->play_data ))
-        {
-            if ( (ttt->board->play_data.row - 1) < 0 )
-                ttt->board->play_data.row = (GAME_BOARD_DIVS - 1);
-            else
-                ttt->board->play_data.row--;
-        }
+        board_player_move( ttt->board, BOARD_DIRECTION_UP );
     }
 }
 
@@ -201,18 +188,7 @@ void _tictactoe_events_keydown_DOWN_handle( tictactoe_t *ttt )
     }
     else
     {
-        if ( (ttt->board->play_data.row + 1) >= GAME_BOARD_DIVS )
-            ttt->board->play_data.row = 0;
-        else
-            ttt->board->play_data.row++;
-
-        while ( !engine_move_valid( ttt->board->engine, &ttt->board->play_data ))
-        {
-            if ( (ttt->board->play_data.row + 1) >= GAME_BOARD_DIVS )
-                ttt->board->play_data.row = 0;
-            else
-                ttt->board->play_data.row++;
-        }
+        board_player_move( ttt->board, BOARD_DIRECTION_DOWN );
     }
 }
 
@@ -223,20 +199,7 @@ void _tictactoe_events_keydown_RIGHT_handle( tictactoe_t *ttt )
 {
     const bool play = (ttt->play_mode != PLAY_MODE_NONE);
     if ( play )
-    {
-        if ( (ttt->board->play_data.column + 1) >= GAME_BOARD_DIVS )
-            ttt->board->play_data.column = 0;
-        else
-            ttt->board->play_data.column++;
-
-        while ( !engine_move_valid( ttt->board->engine, &ttt->board->play_data ))
-        {
-            if ( (ttt->board->play_data.column + 1) >= GAME_BOARD_DIVS )
-                ttt->board->play_data.column = 0;
-            else
-                ttt->board->play_data.column++;
-        }
-    }
+        board_player_move( ttt->board, BOARD_DIRECTION_RIGHT );
 }
 
 /******************************************************************************/
@@ -246,20 +209,7 @@ void _tictactoe_events_keydown_LEFT_handle( tictactoe_t *ttt )
 {
     const bool play = (ttt->play_mode != PLAY_MODE_NONE);
     if ( play )
-    {
-        if ( (ttt->board->play_data.column - 1) < 0 )
-            ttt->board->play_data.column = (GAME_BOARD_DIVS - 1);
-        else
-            ttt->board->play_data.column--;
-
-        while ( !engine_move_valid( ttt->board->engine, &ttt->board->play_data ))
-        {
-            if ( (ttt->board->play_data.column - 1) < 0 )
-                ttt->board->play_data.column = (GAME_BOARD_DIVS - 1);
-            else
-                ttt->board->play_data.column--;
-        }
-    }
+        board_player_move( ttt->board, BOARD_DIRECTION_LEFT );
 }
 
 /******************************************************************************/
