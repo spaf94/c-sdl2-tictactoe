@@ -16,6 +16,45 @@
 /******************************************************************************/
 
 static
+void _board_plays_render( board_t *board )
+{
+    int x_arr_len = 0;
+    int o_arr_len = 0;
+    engine_play_data_t x_arr[GAME_MAX_PLAYS] = { 0 };
+    engine_play_data_t o_arr[GAME_MAX_PLAYS] = { 0 };
+
+    engine_plays_get( board->engine, x_arr, &x_arr_len, o_arr, &o_arr_len );
+
+    // Draw X's
+    for ( int i = 0; i < x_arr_len; i++ )
+    {
+        engine_play_data_t x = x_arr[i];
+        SDL_Rect rect = board->rect_arr[x.row][x.column];
+
+        const int cx = rect.x + (rect.w / 2);
+        const int cy = rect.y + (rect.h / 2);
+
+        SDL_Rect data = { cx, cy, 100, 100 };
+        shape_X_render( board->renderer, &data, 4, COLOR_BLACK );
+    }
+
+    // Draw O's
+    for ( int i = 0; i < o_arr_len; i++ )
+    {
+        engine_play_data_t o = o_arr[i];
+        SDL_Rect rect = board->rect_arr[o.row][o.column];
+
+        const int cx = rect.x + (rect.w / 2);
+        const int cy = rect.y + (rect.h / 2);
+
+        SDL_Point center = { cx, cy };
+        shape_circle_render( board->renderer, &center, 50, 4, COLOR_RED );
+    }
+}
+
+/******************************************************************************/
+
+static
 uint32_t _board_timer_elapsed( uint32_t interval, void *param )
 {
     board_t *board = param;
@@ -81,8 +120,8 @@ void _board_plays_rect_init( board_t *board )
     {
         for ( int k = 0; k < 3; k++ )
         {
-            board->rect_arr[i][k].x = wm + (BOARD_DIV_W * i);
-            board->rect_arr[i][k].y = hm + (BOARD_DIV_W * k);
+            board->rect_arr[i][k].x = wm + (BOARD_DIV_W * k);
+            board->rect_arr[i][k].y = hm + (BOARD_DIV_W * i);
             board->rect_arr[i][k].h = BOARD_DIV_W;
             board->rect_arr[i][k].w = BOARD_DIV_W;
         }
@@ -150,7 +189,7 @@ void board_render( board_t *board )
 
     if ( board->playing )
     {
-        engine_next_move_get( board->engine, &board->row, &board->column );
+        engine_next_move_get( board->engine, &board->play_data );
 
         if ( board->blinking )
             color = color_SDL_Color_get( COLOR_LIGHTSKYBLUE );
@@ -158,7 +197,7 @@ void board_render( board_t *board )
             color = color_SDL_Color_get( COLOR_GAINSBORO );
 
         SDL_SetRenderDrawColor( board->renderer, color.r, color.g, color.b, color.a );
-        SDL_Rect rect = board->rect_arr[board->row][board->column];
+        SDL_Rect rect = board->rect_arr[board->play_data.row][board->play_data.column];
         SDL_RenderFillRect( board->renderer, &rect );
 
         const int cx = rect.x + (rect.w / 2);
@@ -182,6 +221,9 @@ void board_render( board_t *board )
     // Draw vertical lines
     for ( int i = 1; i < 3; i++ )
         _board_line_render( board, i, true );
+
+    // Draw last plays
+    _board_plays_render( board );
 }
 
 /******************************************************************************/

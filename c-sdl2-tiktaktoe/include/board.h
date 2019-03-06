@@ -24,8 +24,7 @@ typedef struct
     bool playerX;
     // Board rectangles
     SDL_Rect rect_arr[GAME_BOARD_DIVS][GAME_BOARD_DIVS];
-    int row;
-    int column;
+    engine_play_data_t play_data;
 } board_t;
 
 /******************************************************************************/

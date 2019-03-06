@@ -12,5 +12,6 @@
 
 // Defines
 #define GAME_BOARD_DIVS 3
+#define GAME_MAX_PLAYS  GAME_BOARD_DIVS * GAME_BOARD_DIVS
 
 #endif // INTERNAL_H
