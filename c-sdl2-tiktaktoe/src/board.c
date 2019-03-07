@@ -187,7 +187,15 @@ void board_render( board_t *board )
     SDL_SetRenderDrawColor( board->renderer, color.r, color.g, color.b, color.a );
     SDL_RenderClear( board->renderer );
 
-    if ( board->playing )
+    // Checks if game finished
+    engine_move_t winner_arr[GAME_BOARD_DIVS] = { 0 };
+    const bool finished = engine_game_finished( board->engine, winner_arr );
+
+    if ( finished )
+    {
+        // TODO: Draw winner line
+    }
+    else
     {
         engine_next_move_get( board->engine, &board->play_data );
 

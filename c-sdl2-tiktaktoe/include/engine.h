@@ -87,4 +87,14 @@ void engine_moves_get(
 
 /******************************************************************************/
 
+/**
+* @brief Checks if a game has finished
+* @param engine     game engine
+* @param winner_arr winner moves array
+* @return true, when game finished
+*/
+bool engine_game_finished( engine_t *engine, engine_move_t *winner_arr );
+
+/******************************************************************************/
+
 #endif // ENGINE_H

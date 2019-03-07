@@ -142,3 +142,99 @@ void engine_moves_get(
 }
 
 /******************************************************************************/
+
+/**
+* @brief Checks if a game has finished
+* @param engine     game engine
+* @param winner_arr winner moves array
+* @return true, when game finished
+*/
+bool engine_game_finished( engine_t *engine, engine_move_t *winner_arr )
+{
+    engine_play_t play = ENGINE_PLAY_N;
+    engine_play_t last = ENGINE_PLAY_N;
+    int count = 0;
+
+    // For each row, for each column
+    for ( int row = 0; row < GAME_BOARD_DIVS; row++ )
+    {
+        count = 0;
+        for ( int column = 0; column < GAME_BOARD_DIVS; column++ )
+        {
+            play = engine->plays[row][column];
+            if ( column == 0 )
+                last = play;
+            if ( play != last || play == ENGINE_PLAY_N )
+                break;
+
+            winner_arr[row].row = row;
+            winner_arr[row].column = column;
+            count++;
+
+            if ( count == GAME_BOARD_DIVS )
+                return true;
+        }
+    }
+
+    // For each column, for each row
+    for ( int column = 0; column < GAME_BOARD_DIVS; column++ )
+    {
+        count = 0;
+        for ( int row = 0; row < GAME_BOARD_DIVS; row++ )
+        {
+            play = engine->plays[row][column];
+            if ( row == 0 )
+                last = play;
+            if ( play != last || play == ENGINE_PLAY_N )
+                break;
+
+            winner_arr[column].row = row;
+            winner_arr[column].column = column;
+            count++;
+
+            if ( count == GAME_BOARD_DIVS )
+                return true;
+        }
+    }
+
+    // First diagonal
+    count = 0;
+    for ( int row = 0, column = 0; row < GAME_BOARD_DIVS; row++, column++ )
+    {
+        play = engine->plays[row][column];
+        if ( row == 0 && column == 0 )
+            last = play;
+        if ( play != last || play == ENGINE_PLAY_N )
+            break;
+
+        winner_arr[row].row = row;
+        winner_arr[row].column = column;
+        count++;
+
+        if ( count == GAME_BOARD_DIVS )
+            return true;
+    }
+
+    // Second diagonal
+    count = 0;
+    const int col_max = (GAME_BOARD_DIVS - 1);
+    for ( int row = 0, column = col_max; row < GAME_BOARD_DIVS; row++, column-- )
+    {
+        play = engine->plays[row][column];
+        if ( row == 0 && column == col_max )
+            last = play;
+        if ( play != last || play == ENGINE_PLAY_N )
+            break;
+
+        winner_arr[row].row = row;
+        winner_arr[row].column = column;
+        count++;
+
+        if ( count == GAME_BOARD_DIVS )
+            return true;
+    }
+
+    return false;
+}
+
+/******************************************************************************/
