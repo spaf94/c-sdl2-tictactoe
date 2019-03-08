@@ -145,7 +145,6 @@ board_t *board_new( SDL_Renderer *renderer, TTF_Font *font, int wh, int ww )
     board->font = font;
     board->window_h = wh;
     board->window_w = ww;
-    board->playing = true;
     board->blinking = true;
     board->engine = engine_new();
 
@@ -236,6 +235,11 @@ void board_render( board_t *board )
 
 /******************************************************************************/
 
+/**
+* @brief Moves a player in the board
+* @param board      game board
+* @param direction  direction
+*/
 void board_player_move( board_t *board, board_direction_t direction )
 {
     if ( direction == BOARD_DIRECTION_UP )

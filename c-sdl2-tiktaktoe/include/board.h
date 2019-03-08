@@ -27,7 +27,6 @@ typedef struct
     // Board
     engine_t *engine;
     int timer;
-    bool playing;
     bool blinking;
     bool playerX;
     // Board rectangles
@@ -65,6 +64,11 @@ void board_render( board_t *board );
 
 /******************************************************************************/
 
+/**
+* @brief Moves a player in the board
+* @param board      game board
+* @param direction  direction
+*/
 void board_player_move( board_t *board, board_direction_t direction );
 
 /******************************************************************************/

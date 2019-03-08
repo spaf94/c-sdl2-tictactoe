@@ -96,7 +96,12 @@ menu_t *menu_new( SDL_Renderer *renderer, TTF_Font *font, int wh, int ww)
 void menu_free( menu_t *menu )
 {
     if ( menu != NULL )
+    {
+        if ( menu->texture != NULL )
+            SDL_DestroyTexture( menu->texture );
+
         free( menu );
+    }
 }
 
 /******************************************************************************/
