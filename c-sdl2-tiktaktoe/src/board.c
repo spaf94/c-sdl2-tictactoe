@@ -16,39 +16,70 @@
 /******************************************************************************/
 
 static
+void _board_winner_line_render( board_t *board, engine_move_t *winner_arr )
+{
+    const engine_move_t im = winner_arr[0];
+    SDL_Rect ini_rect = board->rect_arr[im.row][im.column];
+
+    const engine_move_t em = winner_arr[2];
+    SDL_Rect end_rect = board->rect_arr[em.row][em.column];
+
+    SDL_Point ini_point = { 0 };
+    ini_point.x = ini_rect.x + (ini_rect.w / 2);
+    ini_point.y = ini_rect.y + (ini_rect.h / 2);
+
+    SDL_Point end_point = { 0 };
+    end_point.x = end_rect.x + (end_rect.w / 2);
+    end_point.y = end_rect.y + (end_rect.h / 2);
+
+    shape_line_thickness_render(
+                board->renderer, &ini_point, &end_point, 5, COLOR_RED );
+}
+
+static
+void _board_player_render( SDL_Renderer *renderer, SDL_Rect *rect, bool playerX )
+{
+    const int cx = rect->x + (rect->w / 2);
+    const int cy = rect->y + (rect->h / 2);
+    if ( playerX )
+    {
+        SDL_Rect data = { cx, cy, 65, 65 };
+        shape_X_render( renderer, &data, 5, COLOR_LIGHTSLATEGRAY );
+    }
+    else
+    {
+        SDL_Point center = { cx, cy };
+        shape_circle_render( renderer, &center, 35, 5, COLOR_BLACK );
+    }
+}
+
+/******************************************************************************/
+
+static
 void _board_plays_render( board_t *board )
 {
     int x_arr_len = 0;
     int o_arr_len = 0;
     engine_move_t x_arr[GAME_MAX_PLAYS] = { 0 };
     engine_move_t o_arr[GAME_MAX_PLAYS] = { 0 };
-
     engine_moves_get( board->engine, x_arr, &x_arr_len, o_arr, &o_arr_len );
 
     // Draw X's
     for ( int i = 0; i < x_arr_len; i++ )
     {
-        engine_move_t x = x_arr[i];
+        const engine_move_t x = x_arr[i];
         SDL_Rect rect = board->rect_arr[x.row][x.column];
 
-        const int cx = rect.x + (rect.w / 2);
-        const int cy = rect.y + (rect.h / 2);
-
-        SDL_Rect data = { cx, cy, 100, 100 };
-        shape_X_render( board->renderer, &data, 4, COLOR_BLACK );
+        _board_player_render( board->renderer, &rect, true );
     }
 
     // Draw O's
     for ( int i = 0; i < o_arr_len; i++ )
     {
-        engine_move_t o = o_arr[i];
+        const engine_move_t o = o_arr[i];
         SDL_Rect rect = board->rect_arr[o.row][o.column];
 
-        const int cx = rect.x + (rect.w / 2);
-        const int cy = rect.y + (rect.h / 2);
-
-        SDL_Point center = { cx, cy };
-        shape_circle_render( board->renderer, &center, 50, 4, COLOR_RED );
+        _board_player_render( board->renderer, &rect, false );
     }
 }
 
@@ -182,7 +213,7 @@ void board_render( board_t *board )
         board->timer = SDL_AddTimer( BOARD_TIMER_MS, _board_timer_elapsed, board );
 
     // Set menu background
-    SDL_Color color = color_SDL_Color_get( COLOR_GAINSBORO );
+    SDL_Color color = color_SDL_Color_get( COLOR_WHITESMOKE );
     SDL_SetRenderDrawColor( board->renderer, color.r, color.g, color.b, color.a );
     SDL_RenderClear( board->renderer );
 
@@ -192,33 +223,22 @@ void board_render( board_t *board )
 
     if ( finished )
     {
-        // TODO: Draw winner line
+        _board_winner_line_render( board, winner_arr );
     }
     else
     {
         engine_next_move_get( board->engine, &board->play_data );
 
         if ( board->blinking )
-            color = color_SDL_Color_get( COLOR_LIGHTSKYBLUE );
-        else
             color = color_SDL_Color_get( COLOR_GAINSBORO );
+        else
+            color = color_SDL_Color_get( COLOR_WHITESMOKE );
 
         SDL_SetRenderDrawColor( board->renderer, color.r, color.g, color.b, color.a );
         SDL_Rect rect = board->rect_arr[board->play_data.row][board->play_data.column];
         SDL_RenderFillRect( board->renderer, &rect );
 
-        const int cx = rect.x + (rect.w / 2);
-        const int cy = rect.y + (rect.h / 2);
-        if ( board->playerX )
-        {
-            SDL_Rect data = { cx, cy, 100, 100 };
-            shape_X_render( board->renderer, &data, 4, COLOR_BLACK );
-        }
-        else
-        {
-            SDL_Point center = { cx, cy };
-            shape_circle_render( board->renderer, &center, 50, 4, COLOR_RED );
-        }
+        _board_player_render( board->renderer, &rect, board->playerX );
     }
 
     // Draw horizontal lines

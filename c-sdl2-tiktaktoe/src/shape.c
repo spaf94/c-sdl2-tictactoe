@@ -10,16 +10,24 @@
 * @param point1     point 1
 * @param point2     point 2
 * @param thickness  line thickness
+* @param color_id   color id
 */
-static
-void _shape_line_thickness_render(
+void shape_line_thickness_render(
         SDL_Renderer *renderer,
         SDL_Point *point1,
         SDL_Point *point2,
-        int thickness )
+        int thickness,
+        color_t color_id )
 {
     int p1x = 0;
     int p2x = 0;
+
+    if ( color_id != COLOR_NONE )
+    {
+        // Gets line color
+        SDL_Color color = color_SDL_Color_get( color_id );
+        SDL_SetRenderDrawColor ( renderer, color.r, color.g, color.b, color.a );
+    }
 
     for ( int i = 0; i < thickness; i++ )
     {
@@ -44,10 +52,6 @@ void shape_X_render(
         int thickness,
         color_t color_id )
 {
-    // Gets X color
-    SDL_Color color = color_SDL_Color_get( color_id );
-    SDL_SetRenderDrawColor ( renderer, color.r, color.g, color.b, color.a );
-
     // Line 1
     SDL_Point pa1 = { 0 };
     pa1.x = data->x - (data->w / 2);
@@ -55,7 +59,8 @@ void shape_X_render(
     SDL_Point pb1 = { 0 };
     pb1.x = data->x + (data->w / 2);
     pb1.y = data->y + (data->h / 2);
-    _shape_line_thickness_render( renderer, &pa1, &pb1, thickness );
+    shape_line_thickness_render(
+                renderer, &pa1, &pb1, thickness, color_id );
 
     // Line 2
     SDL_Point pa2 = { 0 };
@@ -64,7 +69,8 @@ void shape_X_render(
     SDL_Point pb2 = { 0 };
     pb2.x = data->x - (data->w / 2);
     pb2.y = data->y + (data->h / 2);
-    _shape_line_thickness_render( renderer, &pa2, &pb2, thickness );
+    shape_line_thickness_render(
+                renderer, &pa2, &pb2, thickness, color_id );
 }
 
 /******************************************************************************/
@@ -96,7 +102,8 @@ void shape_circle_render(
         point1.x = center->x + (int)(radius * cos ( theta ));
         point1.y = center->y - (int)(radius * sin ( theta ));
 
-        _shape_line_thickness_render( renderer, &point1, &point2, thickness);
+        shape_line_thickness_render(
+                    renderer, &point1, &point2, thickness, COLOR_NONE );
 
         point2.x = point1.x;
         point2.y = point1.y;
@@ -104,7 +111,8 @@ void shape_circle_render(
 
     point1.x = center->x + (int)(radius * cos(0));
     point1.y = center->y - (int)(radius * sin(0));
-    _shape_line_thickness_render( renderer, &point1, &point2, thickness);
+    shape_line_thickness_render(
+                renderer, &point1, &point2, thickness, COLOR_NONE );
 }
 
 /******************************************************************************/
