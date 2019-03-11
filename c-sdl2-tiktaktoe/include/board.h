@@ -73,4 +73,22 @@ void board_player_move( board_t *board, board_direction_t direction );
 
 /******************************************************************************/
 
+/**
+* @brief Moves a player to x y in the board
+* @param board      game board
+* @param x          x position
+* @param y          y position
+*/
+void board_player_xy_move( board_t *board, const int x, const int y );
+
+/******************************************************************************/
+
+/**
+* @brief Sets a board move
+* @param board  game board
+*/
+void board_move_set( board_t *board );
+
+/******************************************************************************/
+
 #endif // BOARD_H

@@ -4,11 +4,13 @@
 
 /******************************************************************************/
 
-#define WINDOW_TITLE    "Tic-Tac-Toe"
-#define WINDOW_WIDTH    640
-#define WINDOW_HEIGHT   480
+#define WINDOW_TITLE        "Tic-Tac-Toe"
+#define WINDOW_WIDTH        640
+#define WINDOW_HEIGHT       480
 
-#define CRAZY_TTF_FILE  "../c-sdl2-tiktaktoe/fonts/crazy.ttf"
+#define CRAZY_TTF_FILE      "../c-sdl2-tiktaktoe/fonts/crazy.ttf"
+
+#define MOUSE_DOUBLE_CLICK  2
 
 /******************************************************************************/
 
@@ -131,22 +133,7 @@ void _tictactoe_events_keydown_ENTER_handle( tictactoe_t *ttt )
     }
     else
     {
-        if ( ttt->board->playerX )
-        {
-            ttt->board->playerX = false;
-            engine_move_set(
-                        ttt->board->engine,
-                        &ttt->board->play_data,
-                        ENGINE_PLAY_X );
-        }
-        else
-        {
-            ttt->board->playerX = true;
-            engine_move_set(
-                        ttt->board->engine,
-                        &ttt->board->play_data,
-                        ENGINE_PLAY_O );
-        }
+        board_move_set( ttt->board );
     }
 }
 
@@ -200,6 +187,10 @@ void _tictactoe_events_keydown_DOWN_handle( tictactoe_t *ttt )
 
 /******************************************************************************/
 
+/**
+* @brief Handling RIGHT keydown event
+* @param ttt    game context
+*/
 static
 void _tictactoe_events_keydown_RIGHT_handle( tictactoe_t *ttt )
 {
@@ -210,6 +201,10 @@ void _tictactoe_events_keydown_RIGHT_handle( tictactoe_t *ttt )
 
 /******************************************************************************/
 
+/**
+* @brief Handling LEFT keydown event
+* @param ttt    game context
+*/
 static
 void _tictactoe_events_keydown_LEFT_handle( tictactoe_t *ttt )
 {
@@ -256,6 +251,28 @@ void _tictactoe_events_keydown_handle( tictactoe_t *ttt, SDL_KeyboardEvent *key_
 /******************************************************************************/
 
 /**
+* @brief Handling mouse button down events
+* @param ttt    game context
+* @param key_ev keyboard event
+*/
+void _tictactoe_events_mousebuttondown_handle(
+        tictactoe_t *ttt, SDL_MouseButtonEvent *mouse_button_ev )
+{
+    const bool down = (mouse_button_ev->type == SDL_MOUSEBUTTONDOWN);
+    const bool pressed = (mouse_button_ev->state == SDL_PRESSED);
+
+    if ( down && pressed )
+    {
+        board_player_xy_move( ttt->board, mouse_button_ev->x, mouse_button_ev->y );
+
+        if ( mouse_button_ev->clicks == MOUSE_DOUBLE_CLICK )
+            board_move_set( ttt->board );
+    }
+}
+
+/******************************************************************************/
+
+/**
 * @brief Handle game events
 * @param ttt    game context
 */
@@ -269,6 +286,9 @@ void tictactoe_events_handle( tictactoe_t *ttt )
         {
         case SDL_KEYDOWN:
             _tictactoe_events_keydown_handle( ttt, &event.key );
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            _tictactoe_events_mousebuttondown_handle( ttt, &event.button );
             break;
         case SDL_WINDOWEVENT_CLOSE:
         case SDL_QUIT:

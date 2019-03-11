@@ -15,6 +15,11 @@
 
 /******************************************************************************/
 
+/**
+* @brief Renders the winner line
+* @param board      game board
+* @param winner_arr winner moves array
+*/
 static
 void _board_winner_line_render( board_t *board, engine_move_t *winner_arr )
 {
@@ -36,11 +41,20 @@ void _board_winner_line_render( board_t *board, engine_move_t *winner_arr )
                 board->renderer, &ini_point, &end_point, 5, COLOR_RED );
 }
 
+/******************************************************************************/
+
+/**
+* @brief Renders the player (X or O)
+* @param renderer   game renderer
+* @param rect       rectangle to draw
+* @param playerX    true, if is X player
+*/
 static
 void _board_player_render( SDL_Renderer *renderer, SDL_Rect *rect, bool playerX )
 {
     const int cx = rect->x + (rect->w / 2);
     const int cy = rect->y + (rect->h / 2);
+
     if ( playerX )
     {
         SDL_Rect data = { cx, cy, 65, 65 };
@@ -55,6 +69,10 @@ void _board_player_render( SDL_Renderer *renderer, SDL_Rect *rect, bool playerX 
 
 /******************************************************************************/
 
+/**
+* @brief Renders all game plays
+* @param board  game board
+*/
 static
 void _board_plays_render( board_t *board )
 {
@@ -85,6 +103,11 @@ void _board_plays_render( board_t *board )
 
 /******************************************************************************/
 
+/**
+* @brief On board timer elapsed
+* @param interval   interval
+* @param param      param
+*/
 static
 uint32_t _board_timer_elapsed( uint32_t interval, void *param )
 {
@@ -141,6 +164,10 @@ void _board_line_render( board_t *board, int line, bool vertical )
 
 /******************************************************************************/
 
+/**
+* @brief Initialize the plays rectangles array
+* @param board  game board
+*/
 static
 void _board_plays_rect_init( board_t *board )
 {
@@ -321,6 +348,55 @@ void board_player_move( board_t *board, board_direction_t direction )
             else
                 board->play_data.column--;
         }
+    }
+}
+
+/******************************************************************************/
+
+/**
+* @brief Moves a player to x y in the board
+* @param board      game board
+* @param x          x position
+* @param y          y position
+*/
+void board_player_xy_move( board_t *board, const int x, const int y )
+{
+    for ( int row = 0; row < GAME_BOARD_DIVS; row++ )
+    {
+        for ( int column = 0; column < GAME_BOARD_DIVS; column++ )
+        {
+            SDL_Rect rect = board->rect_arr[row][column];
+            const bool x_ok = ((rect.x < x) && (x < (rect.x + rect.w)));
+            const bool y_ok = ((rect.y < y) && (y < (rect.y + rect.h)));
+
+            if ( x_ok && y_ok )
+            {
+                board->play_data.row = row;
+                board->play_data.column = column;
+                break;
+            }
+        }
+    }
+}
+
+/******************************************************************************/
+
+/**
+* @brief Sets a board move
+* @param board  game board
+*/
+void board_move_set( board_t *board )
+{
+    if ( board->playerX )
+    {
+        board->playerX = false;
+        engine_move_set(
+                    board->engine, &board->play_data, ENGINE_PLAY_X );
+    }
+    else
+    {
+        board->playerX = true;
+        engine_move_set( board->engine, &board->play_data, ENGINE_PLAY_O );
     }
 }
 

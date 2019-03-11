@@ -167,8 +167,8 @@ bool engine_game_finished( engine_t *engine, engine_move_t *winner_arr )
             if ( play != last || play == ENGINE_PLAY_N )
                 break;
 
-            winner_arr[row].row = row;
-            winner_arr[row].column = column;
+            winner_arr[count].row = row;
+            winner_arr[count].column = column;
             count++;
 
             if ( count == GAME_BOARD_DIVS )
@@ -188,8 +188,8 @@ bool engine_game_finished( engine_t *engine, engine_move_t *winner_arr )
             if ( play != last || play == ENGINE_PLAY_N )
                 break;
 
-            winner_arr[column].row = row;
-            winner_arr[column].column = column;
+            winner_arr[count].row = row;
+            winner_arr[count].column = column;
             count++;
 
             if ( count == GAME_BOARD_DIVS )
@@ -207,8 +207,8 @@ bool engine_game_finished( engine_t *engine, engine_move_t *winner_arr )
         if ( play != last || play == ENGINE_PLAY_N )
             break;
 
-        winner_arr[row].row = row;
-        winner_arr[row].column = column;
+        winner_arr[count].row = row;
+        winner_arr[count].column = column;
         count++;
 
         if ( count == GAME_BOARD_DIVS )
@@ -226,8 +226,8 @@ bool engine_game_finished( engine_t *engine, engine_move_t *winner_arr )
         if ( play != last || play == ENGINE_PLAY_N )
             break;
 
-        winner_arr[row].row = row;
-        winner_arr[row].column = column;
+        winner_arr[count].row = row;
+        winner_arr[count].column = column;
         count++;
 
         if ( count == GAME_BOARD_DIVS )
