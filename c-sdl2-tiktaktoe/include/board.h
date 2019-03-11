@@ -16,23 +16,7 @@ typedef enum
     BOARD_DIRECTION_LEFT
 } board_direction_t;
 
-typedef struct
-{
-    // SDL
-    SDL_Renderer *renderer;
-    TTF_Font *font;
-    // Aux data
-    int window_w;
-    int window_h;
-    // Board
-    engine_t *engine;
-    int timer;
-    bool blinking;
-    bool playerX;
-    // Board rectangles
-    SDL_Rect rect_arr[GAME_BOARD_DIVS][GAME_BOARD_DIVS];
-    engine_move_t play_data;
-} board_t;
+typedef struct board_t board_t;
 
 /******************************************************************************/
 

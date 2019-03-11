@@ -13,6 +13,23 @@
 
 /******************************************************************************/
 
+struct menu_t
+{
+    // SDL
+    SDL_Renderer *renderer;
+    TTF_Font *font;
+    SDL_Texture *texture;
+    // Aux data
+    int window_w;
+    int window_h;
+    // Menu
+    menu_option_t option;
+    bool option_changed;
+    bool drawn;
+};
+
+/******************************************************************************/
+
 /**
 * @brief Render a button menu
 * @param menu   menu context
@@ -134,6 +151,45 @@ void menu_render( menu_t *menu )
         menu->drawn = true;
         menu->option_changed = false;
     }
+}
+
+/******************************************************************************/
+
+/**
+* @brief Changes the menu option
+* @param menu   game menu
+* @param down   true, when is down button
+*/
+void menu_option_change( menu_t *menu, bool down )
+{
+    if ( down )
+    {
+        if ( (menu->option + 1) > MENU_OPTION_QUIT )
+            menu->option = MENU_OPTION_1VS1;
+        else
+            menu->option++;
+    }
+    else
+    {
+        if ( (menu->option - 1) < MENU_OPTION_1VS1 )
+            menu->option = MENU_OPTION_QUIT;
+        else
+            menu->option--;
+    }
+
+    menu->option_changed = true;
+}
+
+/******************************************************************************/
+
+/**
+* @brief Gets the menu option
+* @param menu   game menu
+* @return menu option
+*/
+menu_option_t menu_option_get( menu_t *menu )
+{
+    return menu->option;
 }
 
 /******************************************************************************/

@@ -115,7 +115,8 @@ void _tictactoe_events_keydown_ENTER_handle( tictactoe_t *ttt )
     const bool menu = (ttt->play_mode == PLAY_MODE_NONE);
     if ( menu )
     {
-        switch ( ttt->menu->option )
+        const menu_option_t op = menu_option_get( ttt->menu );
+        switch ( op )
         {
         case MENU_OPTION_NONE:
             ttt->play_mode = PLAY_MODE_NONE;
@@ -149,11 +150,7 @@ void _tictactoe_events_keydown_UP_handle( tictactoe_t *ttt )
     const bool menu = (ttt->play_mode == PLAY_MODE_NONE);
     if ( menu )
     {
-        if ( (ttt->menu->option - 1) < MENU_OPTION_1VS1 )
-            ttt->menu->option = MENU_OPTION_QUIT;
-        else
-            ttt->menu->option--;
-        ttt->menu->option_changed = true;
+        menu_option_change( ttt->menu, false );
     }
     else
     {
@@ -173,11 +170,7 @@ void _tictactoe_events_keydown_DOWN_handle( tictactoe_t *ttt )
     const bool menu = (ttt->play_mode == PLAY_MODE_NONE);
     if ( menu )
     {
-        if ( (ttt->menu->option + 1) > MENU_OPTION_QUIT )
-            ttt->menu->option = MENU_OPTION_1VS1;
-        else
-            ttt->menu->option++;
-        ttt->menu->option_changed = true;
+        menu_option_change( ttt->menu, true );
     }
     else
     {

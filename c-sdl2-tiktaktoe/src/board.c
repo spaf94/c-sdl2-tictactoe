@@ -15,6 +15,27 @@
 
 /******************************************************************************/
 
+struct board_t
+{
+    // SDL
+    SDL_Renderer *renderer;
+    TTF_Font *font;
+    // Aux data
+    int window_w;
+    int window_h;
+    // Board
+    engine_t *engine;
+    int timer;
+    bool blinking;
+    bool playerX;
+    bool finished;
+    // Board rectangles
+    SDL_Rect rect_arr[GAME_BOARD_DIVS][GAME_BOARD_DIVS];
+    engine_move_t play_data;
+};
+
+/******************************************************************************/
+
 /**
 * @brief Renders the winner line
 * @param board      game board
@@ -246,9 +267,9 @@ void board_render( board_t *board )
 
     // Checks if game finished
     engine_move_t winner_arr[GAME_BOARD_DIVS] = { 0 };
-    const bool finished = engine_game_finished( board->engine, winner_arr );
+    board->finished = engine_game_finished( board->engine, winner_arr );
 
-    if ( finished )
+    if ( board->finished )
     {
         _board_winner_line_render( board, winner_arr );
     }
@@ -289,6 +310,9 @@ void board_render( board_t *board )
 */
 void board_player_move( board_t *board, board_direction_t direction )
 {
+    if ( board->finished )
+        return;
+
     if ( direction == BOARD_DIRECTION_UP )
     {
         if ( (board->play_data.row - 1) < 0 )
@@ -361,6 +385,9 @@ void board_player_move( board_t *board, board_direction_t direction )
 */
 void board_player_xy_move( board_t *board, const int x, const int y )
 {
+    if ( board->finished )
+        return;
+
     for ( int row = 0; row < GAME_BOARD_DIVS; row++ )
     {
         for ( int column = 0; column < GAME_BOARD_DIVS; column++ )
@@ -387,6 +414,9 @@ void board_player_xy_move( board_t *board, const int x, const int y )
 */
 void board_move_set( board_t *board )
 {
+    if ( board->finished )
+        return;
+
     if ( board->playerX )
     {
         board->playerX = false;

@@ -15,20 +15,7 @@ typedef enum
     MENU_OPTION_QUIT
 } menu_option_t;
 
-typedef struct
-{
-    // SDL
-    SDL_Renderer *renderer;
-    TTF_Font *font;
-    SDL_Texture *texture;
-    // Aux data
-    int window_w;
-    int window_h;
-    // Menu
-    menu_option_t option;
-    bool option_changed;
-    bool drawn;
-} menu_t;
+typedef struct menu_t menu_t;
 
 /******************************************************************************/
 
@@ -57,6 +44,24 @@ void menu_free( menu_t *menu );
 * @param menu   menu context
 */
 void menu_render( menu_t *menu );
+
+/******************************************************************************/
+
+/**
+* @brief Changes the menu option
+* @param menu   game menu
+* @param down   true, when is down button
+*/
+void menu_option_change( menu_t *menu, bool down );
+
+/******************************************************************************/
+
+/**
+* @brief Gets the menu option
+* @param menu   game menu
+* @return menu option
+*/
+menu_option_t menu_option_get( menu_t *menu );
 
 /******************************************************************************/
 
