@@ -7,9 +7,7 @@
 #define WINDOW_TITLE        "Tic-Tac-Toe"
 #define WINDOW_WIDTH        640
 #define WINDOW_HEIGHT       480
-
-#define CRAZY_TTF_FILE      "../c-sdl2-tiktaktoe/fonts/crazy.ttf"
-
+#define CRAZY_TTF_FILE      "../c-sdl2-tictactoe/fonts/crazy.ttf"
 #define MOUSE_DOUBLE_CLICK  2
 
 /******************************************************************************/
