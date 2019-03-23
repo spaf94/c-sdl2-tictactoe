@@ -65,4 +65,14 @@ menu_option_t menu_option_get( menu_t *menu );
 
 /******************************************************************************/
 
+/**
+* @brief Choose a menu option [eg. mouse click]
+* @param menu   game menu
+* @param x      x position clicked
+* @param y      y position clicked
+*/
+void menu_option_choose( menu_t *menu, const int x, const int y );
+
+/******************************************************************************/
+
 #endif // MENU_H

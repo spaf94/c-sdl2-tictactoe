@@ -254,10 +254,20 @@ void _tictactoe_events_mousebuttondown_handle(
 
     if ( down && pressed )
     {
-        board_player_xy_move( ttt->board, mouse_button_ev->x, mouse_button_ev->y );
+        const bool menu = (ttt->play_mode == PLAY_MODE_NONE);
+        if ( menu )
+        {
+            menu_option_choose(
+                        ttt->menu, mouse_button_ev->x, mouse_button_ev->y );
+        }
+        else
+        {
+            board_player_xy_move(
+                        ttt->board, mouse_button_ev->x, mouse_button_ev->y );
 
-        if ( mouse_button_ev->clicks == MOUSE_DOUBLE_CLICK )
-            board_move_set( ttt->board );
+            if ( mouse_button_ev->clicks == MOUSE_DOUBLE_CLICK )
+                board_move_set( ttt->board );
+        }
     }
 }
 

@@ -5,13 +5,25 @@
 
 /******************************************************************************/
 
-#define MENU_BUTTON_W   150
-#define MENU_BUTTON_H   50
-#define MENU_BUTTON_B   3
-#define MENU_BUTTON_BW  MENU_BUTTON_W + ( MENU_BUTTON_B * 2)
-#define MENU_BUTTON_BH  MENU_BUTTON_H + ( MENU_BUTTON_B * 2)
+#define MENU_BUTTONS_CNT    3
+#define MENU_BUTTON_W       150
+#define MENU_BUTTON_H       50
+#define MENU_BUTTON_B       3
+#define MENU_BUTTON_BW      MENU_BUTTON_W + ( MENU_BUTTON_B * 2)
+#define MENU_BUTTON_BH      MENU_BUTTON_H + ( MENU_BUTTON_B * 2)
 
 /******************************************************************************/
+
+static struct
+{
+    menu_option_t option;
+    char str[16];
+} _menu_options[] = {
+    {   MENU_OPTION_NONE    , "NONE"        },
+    {   MENU_OPTION_1VS1    , "1 VS 1"      },
+    {   MENU_OPTION_1VSCOM  , "1 VS COM"    },
+    {   MENU_OPTION_QUIT    , "QUIT"        },
+};
 
 struct menu_t
 {
@@ -19,6 +31,7 @@ struct menu_t
     SDL_Renderer *renderer;
     TTF_Font *font;
     SDL_Texture *texture;
+    SDL_Rect buttons[MENU_BUTTONS_CNT];
     // Aux data
     int window_w;
     int window_h;
@@ -27,6 +40,46 @@ struct menu_t
     bool option_changed;
     bool drawn;
 };
+
+/******************************************************************************/
+
+/**
+* @brief Gets menu option text
+* @param option menu option
+* @return menu option text
+*/
+static
+const char *_menu_option_str( menu_option_t option )
+{
+    unsigned size = ARRAY_SIZE(_menu_options);
+
+    for ( unsigned i = 0; i < size; i++ )
+    {
+        if ( _menu_options[i].option == option )
+            return _menu_options[i].str;
+    }
+
+    return NULL;
+}
+
+/******************************************************************************/
+
+/**
+* @brief Initialize menu buttons position
+* @param menu   game menu
+*/
+static
+void _menu_buttons_positions_init( menu_t *menu )
+{
+    const int x = ((menu->window_w / 2) - (MENU_BUTTON_W / 2));
+
+    for ( int i = 0; i < MENU_BUTTONS_CNT; i++ )
+    {
+        const int y = 140 + ((MENU_BUTTON_H + 30) * i);
+        SDL_Rect rect = { x, y, MENU_BUTTON_W, MENU_BUTTON_H };
+        menu->buttons[i] = rect;
+    }
+}
 
 /******************************************************************************/
 
@@ -101,6 +154,9 @@ menu_t *menu_new( SDL_Renderer *renderer, TTF_Font *font, int wh, int ww)
     menu->option_changed = false;
     menu->drawn = false;
 
+    // Initialize menu buttons positions
+    _menu_buttons_positions_init( menu );
+
     return menu;
 }
 
@@ -136,17 +192,14 @@ void menu_render( menu_t *menu )
         SDL_SetRenderDrawColor( menu->renderer, color.r, color.g, color.b, color.a );
         SDL_RenderClear( menu->renderer );
 
-        // Gets buttons x (CENTER buttons)
-        const int x = ((menu->window_w / 2) - (MENU_BUTTON_W / 2));
-        // Draw 1VS1 button
-        bool hover = (menu->option == MENU_OPTION_1VS1);
-        _menu_button_render( menu, x, 140, hover, "1 VS 1" );
-        // Draw 1VSCOM button
-        hover = (menu->option == MENU_OPTION_1VSCOM);
-        _menu_button_render( menu, x, 220, hover, "1 VS COM" );
-        // Draw QUIT button
-        hover = (menu->option == MENU_OPTION_QUIT);
-        _menu_button_render( menu, x, 300, hover, "QUIT" );
+        for ( int i = 0; i < MENU_BUTTONS_CNT; i++ )
+        {
+            const menu_option_t option = ((menu_option_t)(i+1));
+            const SDL_Rect rect = menu->buttons[i];
+            const bool hover = (menu->option == option);
+            const char *str = _menu_option_str( option );
+            _menu_button_render( menu, rect.x, rect.y, hover, str );
+        }
 
         menu->drawn = true;
         menu->option_changed = false;
@@ -190,6 +243,32 @@ void menu_option_change( menu_t *menu, bool down )
 menu_option_t menu_option_get( menu_t *menu )
 {
     return menu->option;
+}
+
+/******************************************************************************/
+
+/**
+* @brief Choose a menu option [eg. mouse click]
+* @param menu   game menu
+* @param x      x position clicked
+* @param y      y position clicked
+*/
+void menu_option_choose( menu_t *menu, const int x, const int y )
+{
+    for ( int i = 0; i < MENU_BUTTONS_CNT; i++ )
+    {
+        const SDL_Rect rect = menu->buttons[i];
+        const bool x_ok = ((rect.x < x) && (x < (rect.x + rect.w)));
+        const bool y_ok = ((rect.y < y) && (y < (rect.y + rect.h)));
+
+        if ( x_ok && y_ok )
+        {
+            const menu_option_t option = ((menu_option_t)(i + 1));
+            menu->option = option;
+            menu->option_changed = true;
+            break;
+        }
+    }
 }
 
 /******************************************************************************/

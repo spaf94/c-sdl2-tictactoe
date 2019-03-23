@@ -14,4 +14,7 @@
 #define GAME_BOARD_DIVS 3
 #define GAME_MAX_PLAYS  GAME_BOARD_DIVS * GAME_BOARD_DIVS
 
+// Utils
+#define ARRAY_SIZE(x) (sizeof((x)) / sizeof((x)[0]))
+
 #endif // INTERNAL_H
