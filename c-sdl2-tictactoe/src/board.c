@@ -12,6 +12,7 @@
 #define BOARD_LINE_H    5   // Board line heigth
 #define BOARD_DIV_W     (BOARD_LINE_W / 3) // Board divided in 3 zones
 #define BOARD_TIMER_MS  500
+#define BOARD_SHAPE_TH  5   // Board shape thickness
 
 /******************************************************************************/
 
@@ -59,7 +60,11 @@ void _board_winner_line_render( board_t *board, engine_move_t *winner_arr )
     end_point.y = end_rect.y + (end_rect.h / 2);
 
     shape_line_thickness_render(
-                board->renderer, &ini_point, &end_point, 5, COLOR_RED );
+                board->renderer,
+                &ini_point,
+                &end_point,
+                BOARD_SHAPE_TH,
+                COLOR_RED );
 }
 
 /******************************************************************************/
@@ -79,13 +84,37 @@ void _board_player_render( SDL_Renderer *renderer, SDL_Rect *rect, bool playerX 
     if ( playerX )
     {
         SDL_Rect data = { cx, cy, 65, 65 };
-        shape_X_render( renderer, &data, 5, COLOR_LIGHTSLATEGRAY );
+        shape_X_render( renderer, &data, BOARD_SHAPE_TH, COLOR_LIGHTSLATEGRAY );
     }
     else
     {
         SDL_Point center = { cx, cy };
-        shape_circle_render( renderer, &center, 35, 5, COLOR_BLACK );
+        shape_circle_render( renderer, &center, 35, BOARD_SHAPE_TH, COLOR_BLACK );
     }
+}
+
+/******************************************************************************/
+
+/**
+* @brief Renders board playing animation
+* @param board  game board
+*/
+static
+void _board_playing_animation_render( board_t *board )
+{
+    SDL_Color color = { 0 };
+    engine_next_move_get( board->engine, &board->play_data );
+
+    if ( board->blinking )
+        color = color_SDL_Color_get( COLOR_GAINSBORO );
+    else
+        color = color_SDL_Color_get( COLOR_WHITESMOKE );
+
+    SDL_SetRenderDrawColor( board->renderer, color.r, color.g, color.b, color.a );
+    SDL_Rect rect = board->rect_arr[board->play_data.row][board->play_data.column];
+    SDL_RenderFillRect( board->renderer, &rect );
+
+    _board_player_render( board->renderer, &rect, board->playerX );
 }
 
 /******************************************************************************/
@@ -269,25 +298,9 @@ void board_render( board_t *board )
     engine_move_t winner_arr[GAME_BOARD_DIVS] = { 0 };
     board->finished = engine_game_finished( board->engine, winner_arr );
 
-    if ( board->finished )
-    {
-        _board_winner_line_render( board, winner_arr );
-    }
-    else
-    {
-        engine_next_move_get( board->engine, &board->play_data );
-
-        if ( board->blinking )
-            color = color_SDL_Color_get( COLOR_GAINSBORO );
-        else
-            color = color_SDL_Color_get( COLOR_WHITESMOKE );
-
-        SDL_SetRenderDrawColor( board->renderer, color.r, color.g, color.b, color.a );
-        SDL_Rect rect = board->rect_arr[board->play_data.row][board->play_data.column];
-        SDL_RenderFillRect( board->renderer, &rect );
-
-        _board_player_render( board->renderer, &rect, board->playerX );
-    }
+    // Game not finished, draw animation
+    if ( !board->finished )
+        _board_playing_animation_render( board );
 
     // Draw horizontal lines
     for ( int i = 1; i < 3; i++ )
@@ -296,6 +309,10 @@ void board_render( board_t *board )
     // Draw vertical lines
     for ( int i = 1; i < 3; i++ )
         _board_line_render( board, i, true );
+
+    // Game finished, draw winner line
+    if ( board->finished )
+        _board_winner_line_render( board, winner_arr );
 
     // Draw last plays
     _board_plays_render( board );
