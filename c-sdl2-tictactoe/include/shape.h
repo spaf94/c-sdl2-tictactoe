@@ -8,6 +8,11 @@
 
 /******************************************************************************/
 
+#define BUTTON_W       150
+#define BUTTON_H       50
+
+/******************************************************************************/
+
 /**
 * @brief Renders a line with a specified thickness
 * @param renderer   renderer
@@ -54,6 +59,25 @@ void shape_circle_render(
         int radius,
         int thickness,
         color_t color_id );
+
+/******************************************************************************/
+
+/**
+* @brief Render a button
+* @param renderer   game renderer
+* @param font       game font
+* @param x          button x position
+* @param y          button y position
+* @param hover      true, to hover button
+* @param text       button text
+*/
+void shape_button_render(
+        SDL_Renderer *renderer,
+        TTF_Font *font,
+        int x,
+        int y,
+        bool hover,
+        const char *text );
 
 /******************************************************************************/
 

@@ -259,6 +259,9 @@ void _tictactoe_events_mousebuttondown_handle(
         {
             menu_option_choose(
                         ttt->menu, mouse_button_ev->x, mouse_button_ev->y );
+
+            if ( mouse_button_ev->clicks == MOUSE_DOUBLE_CLICK )
+                _tictactoe_events_keydown_ENTER_handle( ttt );
         }
         else
         {

@@ -4,6 +4,12 @@
 
 /******************************************************************************/
 
+#define BUTTON_B       3
+#define BUTTON_BW      BUTTON_W + ( BUTTON_B * 2)
+#define BUTTON_BH      BUTTON_H + ( BUTTON_B * 2)
+
+/******************************************************************************/
+
 /**
 * @brief Renders a line with a specified thickness
 * @param renderer   renderer
@@ -113,6 +119,60 @@ void shape_circle_render(
     point1.y = center->y - (int)(radius * sin(0));
     shape_line_thickness_render(
                 renderer, &point1, &point2, thickness, COLOR_NONE );
+}
+
+/******************************************************************************/
+
+/**
+* @brief Render a button
+* @param renderer   game renderer
+* @param font       game font
+* @param x          button x position
+* @param y          button y position
+* @param hover      true, to hover button
+* @param text       button text
+*/
+void shape_button_render(
+        SDL_Renderer *renderer,
+        TTF_Font *font,
+        int x,
+        int y,
+        bool hover,
+        const char *text )
+{
+    // Border position
+    const int bx = x - BUTTON_B;
+    const int by = y - BUTTON_B;
+    // Draw border
+    SDL_Color color = color_SDL_Color_get( COLOR_BLACK );
+    SDL_SetRenderDrawColor( renderer, color.r, color.g, color.b, color.a );
+    SDL_Rect rect_border = { bx, by, BUTTON_BW, BUTTON_BH };
+    SDL_RenderFillRect( renderer, &rect_border );
+
+    // Gets button color
+    if ( hover )
+        color = color_SDL_Color_get( COLOR_GAME_LIGHTBLUE );
+    else
+        color = color_SDL_Color_get( COLOR_GAME_BLUE );
+    // Draw button
+    SDL_SetRenderDrawColor( renderer, color.r, color.g, color.b, color.a );
+    SDL_Rect rect_button = { x, y, BUTTON_W, BUTTON_H };
+    SDL_RenderFillRect( renderer, &rect_button );
+
+    // Gets text color
+    if ( hover )
+        color = color_SDL_Color_get( COLOR_BLACK );
+    else
+        color = color_SDL_Color_get( COLOR_WHITE );
+    // Render text (CENTERED)
+    SDL_Surface *tmp = TTF_RenderText_Blended( font, text, color );
+    SDL_Texture *texture = SDL_CreateTextureFromSurface( renderer, tmp );
+    const int tx = x + ((BUTTON_W - tmp->w) / 2); // Center text
+    const int ty = y + ((BUTTON_H - tmp->h) / 2); // Center text
+    SDL_Rect rect_text = { tx, ty, tmp->w, tmp->h };
+    SDL_RenderCopy( renderer, texture, NULL, &rect_text);
+    SDL_FreeSurface( tmp );
+    SDL_DestroyTexture( texture );
 }
 
 /******************************************************************************/

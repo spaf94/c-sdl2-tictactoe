@@ -3,6 +3,7 @@
 #include "board.h"
 #include "color.h"
 #include "shape.h"
+#include "endmenu.h"
 
 #include <math.h>
 
@@ -26,6 +27,7 @@ struct board_t
     int window_h;
     // Board
     engine_t *engine;
+    endmenu_t *menu;
     int timer;
     bool blinking;
     bool playerX;
@@ -255,6 +257,7 @@ board_t *board_new( SDL_Renderer *renderer, TTF_Font *font, int wh, int ww )
     board->window_w = ww;
     board->blinking = true;
     board->engine = engine_new();
+    board->menu = endmenu_new( renderer, font );
 
     _board_plays_rect_init( board );
 
@@ -310,12 +313,15 @@ void board_render( board_t *board )
     for ( int i = 1; i < 3; i++ )
         _board_line_render( board, i, true );
 
-    // Game finished, draw winner line
-    if ( board->finished )
-        _board_winner_line_render( board, winner_arr );
-
     // Draw last plays
     _board_plays_render( board );
+
+    // Game finished, draw winner line
+    if ( board->finished )
+    {
+        _board_winner_line_render( board, winner_arr );
+        endmenu_render( board->menu );
+    }
 }
 
 /******************************************************************************/

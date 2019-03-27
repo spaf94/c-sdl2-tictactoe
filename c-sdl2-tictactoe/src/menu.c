@@ -2,15 +2,11 @@
 
 #include "menu.h"
 #include "color.h"
+#include "shape.h"
 
 /******************************************************************************/
 
 #define MENU_BUTTONS_CNT    3
-#define MENU_BUTTON_W       150
-#define MENU_BUTTON_H       50
-#define MENU_BUTTON_B       3
-#define MENU_BUTTON_BW      MENU_BUTTON_W + ( MENU_BUTTON_B * 2)
-#define MENU_BUTTON_BH      MENU_BUTTON_H + ( MENU_BUTTON_B * 2)
 
 /******************************************************************************/
 
@@ -71,66 +67,14 @@ const char *_menu_option_str( menu_option_t option )
 static
 void _menu_buttons_positions_init( menu_t *menu )
 {
-    const int x = ((menu->window_w / 2) - (MENU_BUTTON_W / 2));
+    const int x = ((menu->window_w / 2) - (BUTTON_W / 2));
 
     for ( int i = 0; i < MENU_BUTTONS_CNT; i++ )
     {
-        const int y = 140 + ((MENU_BUTTON_H + 30) * i);
-        SDL_Rect rect = { x, y, MENU_BUTTON_W, MENU_BUTTON_H };
+        const int y = 140 + ((BUTTON_H + 30) * i);
+        SDL_Rect rect = { x, y, BUTTON_W, BUTTON_H };
         menu->buttons[i] = rect;
     }
-}
-
-/******************************************************************************/
-
-/**
-* @brief Render a button menu
-* @param menu   menu context
-* @param x      button x position
-* @param y      button y position
-* @param hover  true, to hover button
-* @param text   button text
-*/
-static
-void _menu_button_render(
-        menu_t *menu,
-        int x,
-        int y,
-        bool hover,
-        const char *text )
-{
-    // Border position
-    const int bx = x - MENU_BUTTON_B;
-    const int by = y - MENU_BUTTON_B;
-    // Draw border
-    SDL_Color color = color_SDL_Color_get( COLOR_BLACK );
-    SDL_SetRenderDrawColor( menu->renderer, color.r, color.g, color.b, color.a );
-    SDL_Rect rect_border = { bx, by, MENU_BUTTON_BW, MENU_BUTTON_BH };
-    SDL_RenderFillRect( menu->renderer, &rect_border );
-
-    // Gets button color
-    if ( hover )
-        color = color_SDL_Color_get( COLOR_GAME_LIGHTBLUE );
-    else
-        color = color_SDL_Color_get( COLOR_GAME_BLUE );
-    // Draw button
-    SDL_SetRenderDrawColor( menu->renderer, color.r, color.g, color.b, color.a );
-    SDL_Rect rect_button = { x, y, MENU_BUTTON_W, MENU_BUTTON_H };
-    SDL_RenderFillRect( menu->renderer, &rect_button );
-
-    // Gets text color
-    if ( hover )
-        color = color_SDL_Color_get( COLOR_BLACK );
-    else
-        color = color_SDL_Color_get( COLOR_WHITE );
-    // Render text (CENTERED)
-    SDL_Surface *tmp = TTF_RenderText_Blended( menu->font, text, color );
-    menu->texture = SDL_CreateTextureFromSurface( menu->renderer, tmp );
-    const int tx = x + ((MENU_BUTTON_W - tmp->w) / 2); // Center text
-    const int ty = y + ((MENU_BUTTON_H - tmp->h) / 2); // Center text
-    SDL_Rect rect_text = { tx, ty, tmp->w, tmp->h };
-    SDL_RenderCopy( menu->renderer, menu->texture, NULL, &rect_text);
-    SDL_FreeSurface( tmp );
 }
 
 /******************************************************************************/
@@ -198,7 +142,8 @@ void menu_render( menu_t *menu )
             const SDL_Rect rect = menu->buttons[i];
             const bool hover = (menu->option == option);
             const char *str = _menu_option_str( option );
-            _menu_button_render( menu, rect.x, rect.y, hover, str );
+            shape_button_render(
+                        menu->renderer, menu->font, rect.x, rect.y, hover, str );
         }
 
         menu->drawn = true;
