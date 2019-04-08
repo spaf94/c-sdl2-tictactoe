@@ -142,7 +142,7 @@ void menu_render( menu_t *menu )
             const SDL_Rect rect = menu->buttons[i];
             const bool hover = (menu->option == option);
             const char *str = _menu_option_str( option );
-            shape_button_render(
+            shape_button_150_50_render(
                         menu->renderer, menu->font, rect.x, rect.y, hover, str );
         }
 

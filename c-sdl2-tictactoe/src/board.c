@@ -334,8 +334,25 @@ void board_render( board_t *board )
 void board_player_move( board_t *board, board_direction_t direction )
 {
     if ( board->finished )
-        return;
+    {
+        SDL_Log( "board_player_move [%d] \n", board->finished );
 
+        switch ( direction )
+        {
+        case BOARD_DIRECTION_RIGHT:
+            endmenu_option_change( board->menu, true );
+            break;
+        case BOARD_DIRECTION_LEFT:
+            endmenu_option_change( board->menu, false );
+            break;
+        default:
+            break;
+        }
+
+        return;
+    }
+
+    // Game in progress
     if ( direction == BOARD_DIRECTION_UP )
     {
         if ( (board->play_data.row - 1) < 0 )
@@ -438,18 +455,21 @@ void board_player_xy_move( board_t *board, const int x, const int y )
 void board_move_set( board_t *board )
 {
     if ( board->finished )
-        return;
-
-    if ( board->playerX )
     {
-        board->playerX = false;
-        engine_move_set(
-                    board->engine, &board->play_data, ENGINE_PLAY_X );
+
     }
     else
     {
-        board->playerX = true;
-        engine_move_set( board->engine, &board->play_data, ENGINE_PLAY_O );
+        if ( board->playerX )
+        {
+            board->playerX = false;
+            engine_move_set( board->engine, &board->play_data, ENGINE_PLAY_X );
+        }
+        else
+        {
+            board->playerX = true;
+            engine_move_set( board->engine, &board->play_data, ENGINE_PLAY_O );
+        }
     }
 }
 

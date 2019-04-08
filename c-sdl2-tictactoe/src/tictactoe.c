@@ -186,6 +186,7 @@ static
 void _tictactoe_events_keydown_RIGHT_handle( tictactoe_t *ttt )
 {
     const bool play = (ttt->play_mode != PLAY_MODE_NONE);
+    SDL_Log( "_tictactoe_events_keydown_RIGHT_handle [PLAY:%d]\n", play );
     if ( play )
         board_player_move( ttt->board, BOARD_DIRECTION_RIGHT );
 }

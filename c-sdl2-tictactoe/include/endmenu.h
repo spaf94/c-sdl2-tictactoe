@@ -47,9 +47,9 @@ void endmenu_render( endmenu_t *menu );
 /**
 * @brief Changes the end menu option
 * @param menu   end game menu
-* @param down   true, when is down button
+* @param down   true, when is right button
 */
-void endmenu_option_change( endmenu_t *menu, bool down );
+void endmenu_option_change( endmenu_t *menu, bool right );
 
 /******************************************************************************/
 

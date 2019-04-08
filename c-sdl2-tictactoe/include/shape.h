@@ -68,10 +68,33 @@ void shape_circle_render(
 * @param font       game font
 * @param x          button x position
 * @param y          button y position
+* @param w          button width
+* @param h          button height
 * @param hover      true, to hover button
 * @param text       button text
 */
 void shape_button_render(
+        SDL_Renderer *renderer,
+        TTF_Font *font,
+        int x,
+        int y,
+        int w,
+        int h,
+        bool hover,
+        const char *text );
+
+/******************************************************************************/
+
+/**
+* @brief Render a button
+* @param renderer   game renderer
+* @param font       game font
+* @param x          button x position
+* @param y          button y position
+* @param hover      true, to hover button
+* @param text       button text
+*/
+void shape_button_150_50_render(
         SDL_Renderer *renderer,
         TTF_Font *font,
         int x,
