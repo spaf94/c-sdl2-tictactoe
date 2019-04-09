@@ -38,6 +38,28 @@ void _tictactoe_sdl_data_init( tictactoe_t *ttt )
 /******************************************************************************/
 
 /**
+* @brief On board closing
+* @param quit   true, when is quit
+* @param cb_arg callback argument
+*/
+static
+void _tictactoe_board_closing_cb( bool quit, void *cb_arg )
+{
+    tictactoe_t *ttt = cb_arg;
+    if ( quit )
+    {
+        // Force menu redraw
+        menu_drawn_set( ttt->menu, false );
+        ttt->play_mode = PLAY_MODE_NONE;
+    }
+
+    // Restart board
+    board_restart( ttt->board );
+}
+
+/******************************************************************************/
+
+/**
 * @brief Create game context
 * @return game context
 */
@@ -49,8 +71,13 @@ tictactoe_t *tictactoe_new()
     // Init SDL data
     _tictactoe_sdl_data_init( ttt );
     // Init menu
-    ttt->menu = menu_new( ttt->renderer, ttt->font, WINDOW_HEIGHT, WINDOW_WIDTH );
-    ttt->board = board_new( ttt->renderer, ttt->font, WINDOW_HEIGHT, WINDOW_WIDTH );
+    ttt->menu = menu_new(
+                ttt->renderer, ttt->font, WINDOW_HEIGHT, WINDOW_WIDTH );
+    ttt->board = board_new(
+                ttt->renderer,
+                ttt->font,
+                _tictactoe_board_closing_cb,
+                ttt );
 
     return ttt;
 }
@@ -90,13 +117,9 @@ void tictactoe_render( tictactoe_t *ttt )
 {
     const bool menu = (ttt->play_mode == PLAY_MODE_NONE);
     if ( menu )
-    {
         menu_render( ttt->menu );
-    }
     else
-    {
         board_render( ttt->board );
-    }
 
     SDL_RenderPresent( ttt->renderer );
 }

@@ -22,12 +22,11 @@ struct board_t
     // SDL
     SDL_Renderer *renderer;
     TTF_Font *font;
-    // Aux data
-    int window_w;
-    int window_h;
     // Board
     engine_t *engine;
     endmenu_t *menu;
+    board_closing_callback_t *cb;
+    void *cb_arg;
     int timer;
     bool blinking;
     bool playerX;
@@ -192,20 +191,20 @@ void _board_line_render( board_t *board, int line, bool vertical )
     if ( vertical )
     {
         // Vertical line
-        const int wm = ((board->window_w - BOARD_LINE_W) / 2); // Width margin
+        const int wm = ((GAME_WINDOW_W - BOARD_LINE_W) / 2); // Width margin
         lh = BOARD_LINE_W;
         lw = BOARD_LINE_H;
-        ly = ((board->window_h - BOARD_LINE_W) / 2);
+        ly = ((GAME_WINDOW_H - BOARD_LINE_W) / 2);
         lx = (wm + (BOARD_DIV_W * line));
     }
     else
     {
         // Horizontal line
-        const int hm = ((board->window_h - BOARD_LINE_W) / 2); // Height margin
+        const int hm = ((GAME_WINDOW_H - BOARD_LINE_W) / 2); // Height margin
         lh = BOARD_LINE_H;
         lw = BOARD_LINE_W;
         ly = (hm + (BOARD_DIV_W * line));
-        lx = ((board->window_w - BOARD_LINE_W) / 2);
+        lx = ((GAME_WINDOW_W - BOARD_LINE_W) / 2);
     }
 
     SDL_Color color = color_SDL_Color_get( COLOR_GAME_BLUE );
@@ -223,8 +222,8 @@ void _board_line_render( board_t *board, int line, bool vertical )
 static
 void _board_plays_rect_init( board_t *board )
 {
-    const int wm = ((board->window_w - BOARD_LINE_W) / 2); // Width margin
-    const int hm = ((board->window_h - BOARD_LINE_W) / 2); // Height margin
+    const int wm = ((GAME_WINDOW_W - BOARD_LINE_W) / 2); // Width margin
+    const int hm = ((GAME_WINDOW_H - BOARD_LINE_W) / 2); // Height margin
 
     for ( int i = 0; i < 3; i++ )
     {
@@ -244,20 +243,24 @@ void _board_plays_rect_init( board_t *board )
 * @brief Create a board context
 * @param renderer   game renderer
 * @param font       game font
-* @param wh         game window heigth
-* @param ww         game window width
+* @param cb         callback
+* @param cb_arg     callback argument
 * @return board context
 */
-board_t *board_new( SDL_Renderer *renderer, TTF_Font *font, int wh, int ww )
+board_t *board_new(
+        SDL_Renderer *renderer,
+        TTF_Font *font,
+        board_closing_callback_t *cb,
+        void *cb_arg )
 {
     board_t *board = calloc( 1, sizeof (*board) );
     board->renderer = renderer;
     board->font = font;
-    board->window_h = wh;
-    board->window_w = ww;
     board->blinking = true;
     board->engine = engine_new();
     board->menu = endmenu_new( renderer, font );
+    board->cb = cb;
+    board->cb_arg = cb_arg;
 
     _board_plays_rect_init( board );
 
@@ -335,8 +338,6 @@ void board_player_move( board_t *board, board_direction_t direction )
 {
     if ( board->finished )
     {
-        SDL_Log( "board_player_move [%d] \n", board->finished );
-
         switch ( direction )
         {
         case BOARD_DIRECTION_RIGHT:
@@ -456,7 +457,11 @@ void board_move_set( board_t *board )
 {
     if ( board->finished )
     {
+        endmenu_option_t option = endmenu_option_get( board->menu );
+        const bool quit = (option == ENDMENU_OPTION_QUIT);
 
+        if ( board->cb != NULL )
+            board->cb( quit, board->cb_arg );
     }
     else
     {
@@ -471,6 +476,24 @@ void board_move_set( board_t *board )
             engine_move_set( board->engine, &board->play_data, ENGINE_PLAY_O );
         }
     }
+}
+
+/******************************************************************************/
+
+/**
+* @brief Restarts the board
+* @param board  game board
+*/
+void board_restart( board_t *board )
+{
+    // Clean up board
+    board->finished = false;
+    board->playerX = false;
+    board->blinking = true;
+    board->timer = 0;
+    memset( &board->play_data, 0, sizeof (board->play_data) );
+    // Clean up engine plays
+    engine_plays_clean( board->engine );
 }
 
 /******************************************************************************/

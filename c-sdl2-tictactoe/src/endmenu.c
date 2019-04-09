@@ -141,8 +141,6 @@ void endmenu_render( endmenu_t *menu )
         const char *text = _endmenu_option_str( option );
         const SDL_Rect rect = menu->buttons[i];
 
-        SDL_Log( "hover[%d] = %d \n", i, hover );
-
         shape_button_render(
                     menu->renderer,
                     menu->font,

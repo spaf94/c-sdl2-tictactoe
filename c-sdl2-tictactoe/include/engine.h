@@ -97,4 +97,8 @@ bool engine_game_finished( engine_t *engine, engine_move_t *winner_arr );
 
 /******************************************************************************/
 
+void engine_plays_clean( engine_t *engine );
+
+/******************************************************************************/
+
 #endif // ENGINE_H

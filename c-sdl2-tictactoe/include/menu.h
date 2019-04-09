@@ -75,4 +75,8 @@ void menu_option_choose( menu_t *menu, const int x, const int y );
 
 /******************************************************************************/
 
+void menu_drawn_set( menu_t *menu, bool drawn );
+
+/******************************************************************************/
+
 #endif // MENU_H

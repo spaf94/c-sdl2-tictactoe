@@ -8,6 +8,8 @@
 
 /******************************************************************************/
 
+typedef void board_closing_callback_t( bool quit, void *cb_arg );
+
 typedef enum
 {
     BOARD_DIRECTION_UP,
@@ -24,11 +26,15 @@ typedef struct board_t board_t;
 * @brief Create a board context
 * @param renderer   game renderer
 * @param font       game font
-* @param wh         game window heigth
-* @param ww         game window width
+* @param cb         callback
+* @param cb_arg     callback argument
 * @return board context
 */
-board_t *board_new( SDL_Renderer *renderer, TTF_Font *font, int wh, int ww );
+board_t *board_new(
+        SDL_Renderer *renderer,
+        TTF_Font *font,
+        board_closing_callback_t *cb,
+        void *cb_arg );
 
 /******************************************************************************/
 
@@ -72,6 +78,14 @@ void board_player_xy_move( board_t *board, const int x, const int y );
 * @param board  game board
 */
 void board_move_set( board_t *board );
+
+/******************************************************************************/
+
+/**
+* @brief Restarts the board
+* @param board  game board
+*/
+void board_restart( board_t *board );
 
 /******************************************************************************/
 
