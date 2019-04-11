@@ -281,6 +281,8 @@ void board_free( board_t *board )
 
         if ( board->engine != NULL )
             engine_free( board->engine );
+        if ( board->menu != NULL )
+            endmenu_free( board->menu );
     }
 }
 

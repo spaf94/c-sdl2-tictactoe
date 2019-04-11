@@ -32,7 +32,7 @@ endmenu_t *endmenu_new( SDL_Renderer *renderer, TTF_Font *font );
 * @brief Release end menu context
 * @param menu   end game menu
 */
-void endmenu_t_free( endmenu_t *menu );
+void endmenu_free( endmenu_t *menu );
 
 /******************************************************************************/
 
