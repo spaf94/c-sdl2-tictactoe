@@ -58,6 +58,10 @@ const char *_endmenu_option_str( endmenu_option_t option )
 
 /******************************************************************************/
 
+/**
+* @brief Initialize end menu buttons positions
+* @param buttons array
+*/
 static
 void _endmenu_buttons_positions_init( SDL_Rect *buttons )
 {
@@ -102,9 +106,7 @@ endmenu_t *endmenu_new( SDL_Renderer *renderer, TTF_Font *font )
 void endmenu_free( endmenu_t *menu )
 {
     if ( menu != NULL )
-    {
         free( menu );
-    }
 }
 
 /******************************************************************************/
@@ -200,10 +202,28 @@ endmenu_option_t endmenu_option_get( endmenu_t *menu )
 * @param menu   end game menu
 * @param x      x position clicked
 * @param y      y position clicked
+* @return true, if some option choosed
 */
-void endmenu_option_choose( endmenu_t *menu, const int x, const int y )
+bool endmenu_option_choose( endmenu_t *menu, const int x, const int y )
 {
+    bool ok = false;
 
+    for ( int i = 0; i < ENDMENU_BUTTONS_CNT; i++ )
+    {
+        const SDL_Rect rect = menu->buttons[i];
+        const bool x_ok = ((rect.x < x) && (x < (rect.x + rect.w)));
+        const bool y_ok = ((rect.y < y) && (y < (rect.y + rect.h)));
+
+        if ( x_ok && y_ok )
+        {
+            const endmenu_option_t option = ((endmenu_option_t)(i + 1));
+            menu->option = option;
+            ok = true;
+            break;
+        }
+    }
+
+    return ok;
 }
 
 /******************************************************************************/

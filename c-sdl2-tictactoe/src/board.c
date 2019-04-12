@@ -169,7 +169,8 @@ uint32_t _board_timer_elapsed( uint32_t interval, void *param )
     else
         board->blinking = true;
 
-    board->timer = SDL_AddTimer( interval, _board_timer_elapsed, board );
+    if ( !board->finished )
+        board->timer = SDL_AddTimer( interval, _board_timer_elapsed, board );
 }
 
 /******************************************************************************/
@@ -294,7 +295,7 @@ void board_free( board_t *board )
 */
 void board_render( board_t *board )
 {
-    if( board->timer <= 0 )
+    if( board->timer <= 0 && !board->finished )
         board->timer = SDL_AddTimer( BOARD_TIMER_MS, _board_timer_elapsed, board );
 
     // Set menu background
@@ -425,28 +426,38 @@ void board_player_move( board_t *board, board_direction_t direction )
 * @param board      game board
 * @param x          x position
 * @param y          y position
+* @return true, if some change happens
 */
-void board_player_xy_move( board_t *board, const int x, const int y )
+bool board_player_xy_move( board_t *board, const int x, const int y )
 {
+    bool ok = false;
+
     if ( board->finished )
-        return;
-
-    for ( int row = 0; row < GAME_BOARD_DIVS; row++ )
     {
-        for ( int column = 0; column < GAME_BOARD_DIVS; column++ )
+        ok = endmenu_option_choose( board->menu, x, y );
+    }
+    else
+    {
+        for ( int row = 0; row < GAME_BOARD_DIVS; row++ )
         {
-            SDL_Rect rect = board->rect_arr[row][column];
-            const bool x_ok = ((rect.x < x) && (x < (rect.x + rect.w)));
-            const bool y_ok = ((rect.y < y) && (y < (rect.y + rect.h)));
-
-            if ( x_ok && y_ok )
+            for ( int column = 0; column < GAME_BOARD_DIVS; column++ )
             {
-                board->play_data.row = row;
-                board->play_data.column = column;
-                break;
+                SDL_Rect rect = board->rect_arr[row][column];
+                const bool x_ok = ((rect.x < x) && (x < (rect.x + rect.w)));
+                const bool y_ok = ((rect.y < y) && (y < (rect.y + rect.h)));
+
+                if ( x_ok && y_ok )
+                {
+                    board->play_data.row = row;
+                    board->play_data.column = column;
+                    ok = true;
+                    break;
+                }
             }
         }
     }
+
+    return ok;
 }
 
 /******************************************************************************/

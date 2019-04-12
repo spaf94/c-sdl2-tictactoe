@@ -198,8 +198,10 @@ menu_option_t menu_option_get( menu_t *menu )
 * @param x      x position clicked
 * @param y      y position clicked
 */
-void menu_option_choose( menu_t *menu, const int x, const int y )
+bool menu_option_choose( menu_t *menu, const int x, const int y )
 {
+    bool ok = false;
+
     for ( int i = 0; i < MENU_BUTTONS_CNT; i++ )
     {
         const SDL_Rect rect = menu->buttons[i];
@@ -211,9 +213,12 @@ void menu_option_choose( menu_t *menu, const int x, const int y )
             const menu_option_t option = ((menu_option_t)(i + 1));
             menu->option = option;
             menu->option_changed = true;
+            ok = true;
             break;
         }
     }
+
+    return ok;
 }
 
 /******************************************************************************/

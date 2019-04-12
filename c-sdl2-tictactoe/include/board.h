@@ -68,8 +68,9 @@ void board_player_move( board_t *board, board_direction_t direction );
 * @param board      game board
 * @param x          x position
 * @param y          y position
+* @return true, if some change happens
 */
-void board_player_xy_move( board_t *board, const int x, const int y );
+bool board_player_xy_move( board_t *board, const int x, const int y );
 
 /******************************************************************************/
 

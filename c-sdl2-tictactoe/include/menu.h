@@ -70,8 +70,9 @@ menu_option_t menu_option_get( menu_t *menu );
 * @param menu   game menu
 * @param x      x position clicked
 * @param y      y position clicked
+* @return true, if some option choosed
 */
-void menu_option_choose( menu_t *menu, const int x, const int y );
+bool menu_option_choose( menu_t *menu, const int x, const int y );
 
 /******************************************************************************/
 

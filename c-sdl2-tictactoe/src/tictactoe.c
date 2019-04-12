@@ -281,18 +281,18 @@ void _tictactoe_events_mousebuttondown_handle(
         const bool menu = (ttt->play_mode == PLAY_MODE_NONE);
         if ( menu )
         {
-            menu_option_choose(
+            const bool ok = menu_option_choose(
                         ttt->menu, mouse_button_ev->x, mouse_button_ev->y );
 
-            if ( mouse_button_ev->clicks == MOUSE_DOUBLE_CLICK )
+            if ( ok && mouse_button_ev->clicks == MOUSE_DOUBLE_CLICK )
                 _tictactoe_events_keydown_ENTER_handle( ttt );
         }
         else
         {
-            board_player_xy_move(
+            const bool ok =board_player_xy_move(
                         ttt->board, mouse_button_ev->x, mouse_button_ev->y );
 
-            if ( mouse_button_ev->clicks == MOUSE_DOUBLE_CLICK )
+            if ( ok && mouse_button_ev->clicks == MOUSE_DOUBLE_CLICK )
                 board_move_set( ttt->board );
         }
     }

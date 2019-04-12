@@ -67,8 +67,9 @@ endmenu_option_t endmenu_option_get( endmenu_t *menu );
 * @param menu   end game menu
 * @param x      x position clicked
 * @param y      y position clicked
+* @return true, if some option choosed
 */
-void endmenu_option_choose( endmenu_t *menu, const int x, const int y );
+bool endmenu_option_choose( endmenu_t *menu, const int x, const int y );
 
 /******************************************************************************/
 
