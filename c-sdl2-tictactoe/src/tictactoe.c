@@ -96,12 +96,14 @@ void tictactoe_free( tictactoe_t *ttt )
             menu_free( ttt->menu );
         if ( ttt->board != NULL )
             board_free( ttt->board );
-        if ( ttt->window != NULL )
-            SDL_DestroyWindow( ttt->window );
+
+        // Release SDL resources
         if ( ttt->renderer != NULL )
             SDL_DestroyRenderer( ttt->renderer );
         if ( ttt->font != NULL )
             TTF_CloseFont( ttt->font );
+        if ( ttt->window != NULL )
+            SDL_DestroyWindow( ttt->window );
 
         free( ttt );
     }
