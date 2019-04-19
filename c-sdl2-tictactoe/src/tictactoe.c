@@ -19,6 +19,17 @@
 static
 void _tictactoe_sdl_data_init( tictactoe_t *ttt )
 {
+    // SDL compiled version
+    SDL_version compiled = { 0 };
+    SDL_VERSION( &compiled );
+    SDL_Log( "SDL compiled version %d.%d.%d \n",
+             compiled.major, compiled.minor, compiled.patch );
+    // SDL linked version
+    SDL_version linked = { 0 };
+    SDL_GetVersion( &linked );
+    SDL_Log( "SDL linked version %d.%d.%d \n",
+             linked.major, linked.minor, linked.patch );
+
     // Create game window
     ttt->window = SDL_CreateWindow( WINDOW_TITLE,
                                     SDL_WINDOWPOS_UNDEFINED,
