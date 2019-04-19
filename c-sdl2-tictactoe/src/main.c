@@ -4,8 +4,11 @@
 
 /******************************************************************************/
 
-int main()
+int main(int argc, char *argv[])
 {
+    (void) argc;
+    (void) argv;
+
     // Init SDL (takes some time)
     SDL_Init( SDL_INIT_VIDEO );
     TTF_Init();

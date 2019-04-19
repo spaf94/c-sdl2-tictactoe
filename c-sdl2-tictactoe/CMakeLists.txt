@@ -10,18 +10,26 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 # Set source and include folders
-set(SRC_DIR "./src")
-set(INC_DIR "./include")
+set(SRC_DIR "${CMAKE_SOURCE_DIR}/src/")
+set(INC_DIR "${CMAKE_SOURCE_DIR}/include/")
 
 
 if (WIN32)
 
-    set(SDL2_PATH "C:\\Work\\DevLibs\\SDL\\")
-    set(SDL2_INCLUDE "C:\\Work\\DevLibs\\SDL\\include\\")
-    set(SDL2_MAIN_LIB "C:/Work/DevLibs/SDL/lib/libSDL2main.a")
-    set(SDL2_LIB "C:/Work/DevLibs/SDL/lib/libSDL2.dll.a")
+    # SDL2
+    set(SDL2_PATH "C:\\Work\\DevLibs\\SDL2")
+    set(SDL2_INCLUDE "C:\\Work\\DevLibs\\SDL2\\include\\")
+    #set(SDL2_MAIN_LIB "C:\\Work\\DevLibs\\SDL2\\lib\\libSDL2main.a")
+    set(SDL2_LIB "C:\\Work\\DevLibs\\SDL\\lib\\libSDL2.dll.a")
 
-    include_directories(${SDL2_INCLUDE})
+    # SDL2 ttf
+    set(SDL2_TTF_PATH "C:\\Work\\DevLibs\\SDL2_ttf")
+    set(SDL2_TTF_INCLUDE "C:\\Work\\DevLibs\\SDL2_ttf\\include\\")
+    set(SDL2_TTF_LIB "C:\\Work\\DevLibs\\SDL2_ttf\\lib\\libSDL2_ttf.dll.a")
+
+    include_directories(${INC_DIR}
+                        ${SDL2_INCLUDE}
+                        ${SDL2_TTF_INCLUDE})
 
 else()
 
@@ -62,7 +70,7 @@ set(SOURCES
 add_executable(${PROJECT_NAME} ${SOURCES} ${INCLUDES})
 
 if (WIN32)
-
+    target_link_libraries(${PROJECT_NAME} ${SDL2_LIB} ${SDL2_TTF_LIB})
 else()
     target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} m)
 endif()
