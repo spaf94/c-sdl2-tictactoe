@@ -2,6 +2,7 @@
 #define INTERNAL_H
 
 // Include SDL2 headers
+#define SDL_MAIN_HANDLED 1
 #include <SDL.h>
 #include <SDL_ttf.h>
 //#include <SDL_image.h>
@@ -9,6 +10,7 @@
 // Include system headers
 #include <stdio.h>
 #include <stdbool.h>
+#include <math.h>
 
 // Defines
 #define GAME_BOARD_DIVS     3

@@ -16,16 +16,17 @@ set(INC_DIR "${CMAKE_SOURCE_DIR}/include/")
 
 if (WIN32)
 
+    set(WIN32_PATH "${CMAKE_SOURCE_DIR}/win32")
+
     # SDL2
-    set(SDL2_PATH "C:\\Work\\DevLibs\\SDL2")
-    set(SDL2_INCLUDE "C:\\Work\\DevLibs\\SDL2\\include\\")
-    #set(SDL2_MAIN_LIB "C:\\Work\\DevLibs\\SDL2\\lib\\libSDL2main.a")
-    set(SDL2_LIB "C:\\Work\\DevLibs\\SDL\\lib\\libSDL2.dll.a")
+    set(SDL2_PATH "${WIN32_PATH}/SDL2")
+    set(SDL2_INCLUDE "${SDL2_PATH}/include")
+    set(SDL2_LIB "${SDL2_PATH}/lib/libSDL2.dll.a")
 
     # SDL2 ttf
-    set(SDL2_TTF_PATH "C:\\Work\\DevLibs\\SDL2_ttf")
-    set(SDL2_TTF_INCLUDE "C:\\Work\\DevLibs\\SDL2_ttf\\include\\")
-    set(SDL2_TTF_LIB "C:\\Work\\DevLibs\\SDL2_ttf\\lib\\libSDL2_ttf.dll.a")
+    set(SDL2_TTF_PATH "${WIN32_PATH}/SDL2_ttf")
+    set(SDL2_TTF_INCLUDE "${SDL2_TTF_PATH}/include")
+    set(SDL2_TTF_LIB "${SDL2_TTF_PATH}/lib/libSDL2_ttf.dll.a")
 
     include_directories(${INC_DIR}
                         ${SDL2_INCLUDE}
