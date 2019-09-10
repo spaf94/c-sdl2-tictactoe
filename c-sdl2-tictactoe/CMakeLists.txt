@@ -42,7 +42,7 @@ else()
     # Set include directories
     include_directories(${INC_DIR}
                         ${SDL2_INCLUDE_DIRS}
-                        ${SDL2_IMAGE_INCLUDE_DIRS}
+                        #${SDL2_IMAGE_INCLUDE_DIRS}
                         ${SDL2_TTF_INCLUDE_DIRS})
 endif()
 
@@ -73,5 +73,6 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${INCLUDES})
 if (WIN32)
     target_link_libraries(${PROJECT_NAME} ${SDL2_LIB} ${SDL2_TTF_LIB})
 else()
-    target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} m)
+    #target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} m)
+    target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES} m)
 endif()
