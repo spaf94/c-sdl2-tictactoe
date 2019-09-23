@@ -69,7 +69,7 @@ endmenu_option_t endmenu_option_get( endmenu_t *menu );
 * @param y      y position clicked
 * @return true, if some option choosed
 */
-bool endmenu_option_choose( endmenu_t *menu, const int x, const int y );
+bool endmenu_option_choose( endmenu_t *menu, int x, int y );
 
 /******************************************************************************/
 

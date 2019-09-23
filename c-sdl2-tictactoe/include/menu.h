@@ -72,7 +72,7 @@ menu_option_t menu_option_get( menu_t *menu );
 * @param y      y position clicked
 * @return true, if some option choosed
 */
-bool menu_option_choose( menu_t *menu, const int x, const int y );
+bool menu_option_choose( menu_t *menu, int x, int y );
 
 /******************************************************************************/
 

@@ -5,8 +5,8 @@
 /******************************************************************************/
 
 #define BUTTON_B       3
-#define BUTTON_BW      BUTTON_W + ( BUTTON_B * 2)
-#define BUTTON_BH      BUTTON_H + ( BUTTON_B * 2)
+#define BUTTON_BW      (BUTTON_W + ( BUTTON_B * 2))
+#define BUTTON_BH      (BUTTON_H + ( BUTTON_B * 2))
 
 /******************************************************************************/
 
