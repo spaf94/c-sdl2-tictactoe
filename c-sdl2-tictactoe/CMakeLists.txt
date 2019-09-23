@@ -55,7 +55,8 @@ set(INCLUDES
     ${INC_DIR}/board.h
     ${INC_DIR}/shape.h
     ${INC_DIR}/engine.h
-    ${INC_DIR}/endmenu.h)
+    ${INC_DIR}/endmenu.h
+    ${INC_DIR}/util.h)
 
 # Set source files
 set(SOURCES
@@ -66,7 +67,8 @@ set(SOURCES
     ${SRC_DIR}/board.c
     ${SRC_DIR}/shape.c
     ${SRC_DIR}/engine.c
-    ${SRC_DIR}/endmenu.c)
+    ${SRC_DIR}/endmenu.c
+    ${SRC_DIR}/util.c)
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${INCLUDES})
 

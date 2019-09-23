@@ -1,6 +1,7 @@
 /******************************************************************************/
 
 #include "engine.h"
+#include "util.h"
 
 /******************************************************************************/
 
@@ -15,7 +16,7 @@ struct engine_t
 * @brief Creates game engine
 * @return game engine
 */
-engine_t *engine_new()
+engine_t *engine_new( void )
 {
     engine_t *engine = calloc( 1, sizeof (*engine) );
 
@@ -86,7 +87,8 @@ bool engine_move_valid( engine_t *engine, engine_move_t *move )
 * @param move   move data
 * @param play   play type
 */
-void engine_move_set( engine_t *engine, engine_move_t *move, engine_play_t play )
+void engine_move_set(
+        engine_t *engine, engine_move_t *move, engine_play_t play )
 {
     engine->plays[move->row][move->column] = play;
 }
@@ -239,6 +241,10 @@ bool engine_game_finished( engine_t *engine, engine_move_t *winner_arr )
 
 /******************************************************************************/
 
+/**
+ * @brief Cleans engine plays
+ * @param engine    Game engine
+ */
 void engine_plays_clean( engine_t *engine )
 {
     memset( &engine->plays, 0, sizeof (engine->plays) );
@@ -246,3 +252,20 @@ void engine_plays_clean( engine_t *engine )
 
 /******************************************************************************/
 
+/**
+ * @brief Gets next COM move
+ * @param engine    Game engine
+ * @param move      Next move
+ */
+void engine_com_next_move_get( engine_t *engine, engine_move_t *move )
+{
+    bool ok = false;
+    while ( !ok )
+    {
+        move->row    = util_random_number( 0, 2 );
+        move->column = util_random_number( 0, 2 );
+        ok = engine_move_valid( engine, move );
+    }
+}
+
+/******************************************************************************/

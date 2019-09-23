@@ -28,7 +28,7 @@ typedef struct engine_t engine_t;
 * @brief Creates game engine
 * @return game engine
 */
-engine_t *engine_new();
+engine_t *engine_new( void );
 
 /******************************************************************************/
 
@@ -66,7 +66,8 @@ bool engine_move_valid( engine_t *engine, engine_move_t *move );
 * @param move   move data
 * @param play   play type
 */
-void engine_move_set( engine_t *engine, engine_move_t *move, engine_play_t play );
+void engine_move_set(
+        engine_t *engine, engine_move_t *move, engine_play_t play );
 
 /******************************************************************************/
 
@@ -97,7 +98,20 @@ bool engine_game_finished( engine_t *engine, engine_move_t *winner_arr );
 
 /******************************************************************************/
 
+/**
+ * @brief Cleans engine plays
+ * @param engine    Game engine
+ */
 void engine_plays_clean( engine_t *engine );
+
+/******************************************************************************/
+
+/**
+ * @brief Gets next COM move
+ * @param engine    Game engine
+ * @param move      Next move
+ */
+void engine_com_next_move_get( engine_t *engine, engine_move_t *move );
 
 /******************************************************************************/
 
