@@ -140,35 +140,49 @@ void tictactoe_render( tictactoe_t *ttt )
 /******************************************************************************/
 
 /**
+ * @brief Handling ENTER when are in menu mode
+ * @param ttt   Game context
+ */
+static
+void _tictactoe_play_mode_none_handle( tictactoe_t *ttt )
+{
+    const menu_option_t op = menu_option_get( ttt->menu );
+    switch ( op )
+    {
+    case MENU_OPTION_NONE:
+        ttt->play_mode = PLAY_MODE_NONE;
+        break;
+    case MENU_OPTION_1VS1:
+        ttt->play_mode = PLAY_MODE_1VS1;
+        break;
+    case MENU_OPTION_1VSCOM:
+        ttt->play_mode = PLAY_MODE_1VSCOM;
+        break;
+    case MENU_OPTION_QUIT:
+        ttt->running = false;
+        break;
+    }
+}
+
+/******************************************************************************/
+
+/**
 * @brief Handling ENTER keydown event
 * @param ttt    game context
 */
 static
 void _tictactoe_events_keydown_ENTER_handle( tictactoe_t *ttt )
 {
-    const bool menu = (ttt->play_mode == PLAY_MODE_NONE);
-    if ( menu )
+    switch ( ttt->play_mode )
     {
-        const menu_option_t op = menu_option_get( ttt->menu );
-        switch ( op )
-        {
-        case MENU_OPTION_NONE:
-            ttt->play_mode = PLAY_MODE_NONE;
-            break;
-        case MENU_OPTION_1VS1:
-            ttt->play_mode = PLAY_MODE_1VS1;
-            break;
-        case MENU_OPTION_1VSCOM:
-            ttt->play_mode = PLAY_MODE_1VSCOM;
-            break;
-        case MENU_OPTION_QUIT:
-            ttt->running = false;
-            break;
-        }
-    }
-    else
-    {
+    case PLAY_MODE_NONE:
+        _tictactoe_play_mode_none_handle( ttt );
+        break;
+    case PLAY_MODE_1VS1:
         board_move_set( ttt->board );
+        break;
+    case PLAY_MODE_1VSCOM:
+        break;
     }
 }
 

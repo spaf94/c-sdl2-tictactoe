@@ -35,7 +35,7 @@ typedef struct
 * @brief Create game context
 * @return game context
 */
-tictactoe_t *tictactoe_new();
+tictactoe_t *tictactoe_new( void );
 
 /******************************************************************************/
 
